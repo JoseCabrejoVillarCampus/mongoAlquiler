@@ -899,6 +899,11 @@ db.reserva.aggregate([{
         }
     },
     {
+        $match: {
+            Estado: "Apartado"
+        }
+    },
+    {
         $group: {
             _id: "$_id",
             ID_Reserva: {
@@ -912,7 +917,8 @@ db.reserva.aggregate([{
             },
         }
     }
-])
+]);
+
 //? 14 Mostrar los empleados con cargo de "Gerente" o "Asistente"//
 
 use("db_campus_alquiler");
@@ -922,7 +928,7 @@ db.empleado.find({
     }, {
         Cargo: "Asistente"
     }]
-})
+});
 
 //? 15 Obtener los datos de los clientes que realizaron al menos un alquiler//
 
