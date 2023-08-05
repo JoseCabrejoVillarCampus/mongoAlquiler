@@ -1,40 +1,68 @@
 use("db_campus_alquiler");
-db.sucursal.insertMany([{
-        _id: 1,
-        ID_Sucursal: 1,
-        Nombre: "Bucaramanga",
-        Direccion: "calle 15# 21",
-        Telefono: "3127240173"
+db.createCollection("sucursal", {
+    validator: {
+    $jsonSchema: {
+        bsonType: "object",
+        required: ["ID_Sucursal", "Nombre", "Direccion", "Telefono"],
+        properties: {
+            ID_Sucursal: {
+                bsonType: "int",
+                minimum: 0,
+                maximum: 20,
+                description: "El campo ID_Sucursal debe ser un número y estar comprendido entre 0 y 20",
+            },
+            Nombre: {
+                bsonType: "string",
+                pattern: "^[A-Za-z\\s]+$",
+                description: "Debe informar el campo nombre y este debe ser un string",
+            },
+            Direccion: {
+                bsonType: "string",
+                pattern: "^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ,.#@\\s-]+$",
+                description: "Debe informar el campo direccion y este debe ser un string",
+            },
+            Telefono: {
+                bsonType: "string",
+                description: "Debe informar el campo telefono y este debe ser un string",
+            },
+        },
     },
-    {
-        _id: 2,
-        ID_Sucursal: 2,
-        Nombre: "Medellin",
-        Direccion: "calle 143# 31",
-        Telefono: "312753453"
     },
-    {
-        _id: 3,
-        ID_Sucursal: 3,
-        Nombre: "Sincelejo",
-        Direccion: "carrera 1# 14",
-        Telefono: "3123456754"
-    },
-    {
-        _id: 4,
-        ID_Sucursal: 4,
-        Nombre: "Barranquilla",
-        Direccion: "carrera 34 #11",
-        Telefono: "312900909"
-    },
-    {
-        _id: 5,
-        ID_Sucursal: 5,
-        Nombre: "Tolu",
-        Direccion: "calle 26# 41",
-        Telefono: "3203443434"
-    }
+});
+use("db_campus_alquiler");
+db.sucursal.insertMany([
+  {
+    ID_Sucursal: 1,
+    Nombre: "Bucaramanga",
+    Direccion: "calle 15# 21",
+    Telefono: "3127240173",
+  },
+  {
+    ID_Sucursal: 2,
+    Nombre: "Medellin",
+    Direccion: "calle 143# 31",
+    Telefono: "312753453",
+  },
+  {
+    ID_Sucursal: 3,
+    Nombre: "Sincelejo",
+    Direccion: "carrera 1# 14",
+    Telefono: "3123456754",
+  },
+  {
+    ID_Sucursal: 4,
+    Nombre: "Barranquilla",
+    Direccion: "carrera 34 #11",
+    Telefono: "312900909",
+  },
+  {
+    ID_Sucursal: 5,
+    Nombre: "Tolu",
+    Direccion: "calle 26# 41",
+    Telefono: "3203443434",
+  },
 ]);
+
 use("db_campus_alquiler");
 db.sucursal_automovil.insertMany([{
         _id: 1,
