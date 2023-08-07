@@ -62,48 +62,114 @@ db.sucursal.insertMany([
     Telefono: "3203443434",
   },
 ]);
-
+use("db_campus_alquiler");
+db.createCollection("sucursal_automovil", {
+    validator: {
+    $jsonSchema: {
+        bsonType: "object",
+        required: ["ID_Sucursal_id", "ID_Automovil_id", "Cantidad_Disponible"],
+        properties: {
+            ID_Sucursal_id: {
+                bsonType: "int",
+                minimum: 0,
+                maximum: 20,
+                description: "El campo ID_Sucursal_id debe ser un número y estar comprendido entre 0 y 20"
+            },
+            ID_Automovil_id: {
+                bsonType: "int",
+                minimum: 0,
+                maximum: 20,
+                description: "El campo ID_Automovil_id debe ser un número y estar comprendido entre 0 y 20"
+            },
+            Cantidad_Disponible: {
+                bsonType: "int",
+                minimum: 0,
+                description: "El campo Cantidad_Disponible debe ser un número"
+            }
+        },
+    },
+    },
+});
 use("db_campus_alquiler");
 db.sucursal_automovil.insertMany([{
-        _id: 1,
         ID_Sucursal_id: 1,
         ID_Automovil_id: 1,
         Cantidad_Disponible: 10
     },
     {
-        _id: 6,
         ID_Sucursal_id: 1,
         ID_Automovil_id: 2,
         Cantidad_Disponible: 21
     },
     {
-        _id: 2,
         ID_Sucursal_id: 2,
         ID_Automovil_id: 2,
         Cantidad_Disponible: 110
     },
     {
-        _id: 3,
         ID_Sucursal_id: 3,
         ID_Automovil_id: 3,
         Cantidad_Disponible: 21
     },
     {
-        _id: 4,
         ID_Sucursal_id: 4,
         ID_Automovil_id: 4,
         Cantidad_Disponible: 30
     },
     {
-        _id: 5,
         ID_Sucursal_id: 5,
         ID_Automovil_id: 5,
         Cantidad_Disponible: 13
     }
 ]);
 use("db_campus_alquiler");
+db.createCollection("reserva", {
+    validator: {
+    $jsonSchema: {
+        bsonType: "object",
+        required: ["ID_Reserva", "ID_Cliente_id", "ID_Automovil_id", "Fecha_Reserva","Fecha_Inicio","Fecha_Fin","Estado"],
+        properties: {
+            ID_Reserva: {
+                bsonType: "int",
+                minimum: 0,
+                maximum: 20,
+                description: "El campo ID_Reserva debe ser un número y estar comprendido entre 0 y 20"
+            },
+            ID_Cliente_id: {
+                bsonType: "int",
+                minimum: 0,
+                maximum: 20,
+                description: "El campo ID_Cliente_id debe ser un número y estar comprendido entre 0 y 20"
+            },
+            ID_Automovil_id: {
+                bsonType: "int",
+                minimum: 0,
+                maximum: 20,
+                description: "El campo ID_Automovil_id debe ser un número y estar comprendido entre 0 y 20"
+            },
+            Fecha_Reserva: {
+                bsonType: "date",
+                description: "Debe informar el campo Fecha_Reserva y este debe ser un string",
+            },
+            Fecha_Inicio: {
+                bsonType: "date",
+                description: "Debe informar el campo Fecha_Inicio y este debe ser un string",
+            },
+            Fecha_Fin: {
+                bsonType: "date",
+                description: "Debe informar el campo Fecha_Fin y este debe ser un string",
+            },
+            Estado: {
+                bsonType: "string",
+                pattern: "^[A-Za-z\\s]+$",
+                description: "Debe informar el campo Estado y este debe ser un string",
+            }
+        },
+    },
+    },
+});
+use("db_campus_alquiler");
 db.reserva.insertMany([{
-        _id: 1,
         ID_Reserva: 1,
         ID_Cliente_id: 1,
         ID_Automovil_id: 1,
@@ -113,7 +179,6 @@ db.reserva.insertMany([{
         Estado: "Apartado",
     },
     {
-        _id: 2,
         ID_Reserva: 2,
         ID_Cliente_id: 2,
         ID_Automovil_id: 2,
@@ -123,7 +188,6 @@ db.reserva.insertMany([{
         Estado: "Apartado"
     },
     {
-        _id: 3,
         ID_Reserva: 3,
         ID_Cliente_id: 3,
         ID_Automovil_id: 3,
@@ -133,7 +197,6 @@ db.reserva.insertMany([{
         Estado: "Apartado",
     },
     {
-        _id: 4,
         ID_Reserva: 4,
         ID_Cliente_id: 4,
         ID_Automovil_id: 4,
@@ -143,7 +206,6 @@ db.reserva.insertMany([{
         Estado: "Apartado",
     },
     {
-        _id: 5,
         ID_Reserva: 5,
         ID_Cliente_id: 5,
         ID_Automovil_id: 5,
