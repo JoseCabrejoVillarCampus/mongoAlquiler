@@ -376,7 +376,7 @@ use("db_campus_alquiler");
 db.cliente.insertMany([{
         ID_Cliente: 1,
         Nombre: "Jose",
-        Apellido: "Cabrejo",
+        Apellido: "Cabrejos",
         DNI: {
             "Cedula": "1098726726"
         },
