@@ -1,5 +1,8 @@
 use("db_campus_alquiler");
 db.createCollection("sucursal", {
+    capped: true,
+    size: 1900,
+    max: 5,
     validator: {
     $jsonSchema: {
         bsonType: "object",
@@ -65,6 +68,9 @@ db.sucursal.insertMany([
 ]);
 use("db_campus_alquiler");
 db.createCollection("sucursal_automovil", {
+    capped: true,
+    size: 1900,
+    max: 5,
     validator: {
     $jsonSchema: {
         bsonType: "object",
@@ -125,6 +131,9 @@ db.sucursal_automovil.insertMany([{
 ]);
 use("db_campus_alquiler");
 db.createCollection("reserva", {
+    capped: true,
+    size: 1900,
+    max: 5,
     validator: {
     $jsonSchema: {
         bsonType: "object",
@@ -218,6 +227,9 @@ db.reserva.insertMany([{
 ]);
 use("db_campus_alquiler");
 db.createCollection("automovil", {
+    capped: true,
+    size: 1900,
+    max: 5,
     validator: {
     $jsonSchema: {
         bsonType: "object",
@@ -312,6 +324,9 @@ db.automovil.insertMany([{
 ]);
 use("db_campus_alquiler");
 db.createCollection("cliente", {
+    capped: true,
+    size: 1900,
+    max: 5,
     validator: {
         $jsonSchema: {
             bsonType: "object",
@@ -431,6 +446,9 @@ db.cliente.insertMany([{
 ]);
 use("db_campus_alquiler");
 db.createCollection("alquiler", {
+    capped: true,
+    size: 1900,
+    max: 5,
     validator: {
     $jsonSchema: {
         bsonType: "object",
@@ -524,6 +542,9 @@ db.alquiler.insertMany([{
 ]);
 use("db_campus_alquiler");
 db.createCollection("registro_devolucion", {
+    capped: true,
+    size: 1900,
+    max: 5,
     validator: {
     $jsonSchema: {
         bsonType: "object",
@@ -607,6 +628,9 @@ db.registro_devolucion.insertMany([{
 ]);
 use("db_campus_alquiler");
 db.createCollection("registro_entrega", {
+    capped: true,
+    size: 1900,
+    max: 5,
     validator: {
     $jsonSchema: {
         bsonType: "object",
@@ -682,6 +706,9 @@ db.registro_entrega.insertMany([{
 ]);
 use("db_campus_alquiler");
 db.createCollection("empleado", {
+    capped: true,
+    size: 1900,
+    max: 5,
     validator: {
     $jsonSchema: {
         bsonType: "object",
