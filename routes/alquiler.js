@@ -35,16 +35,12 @@ storageAlquiler.use("/:id?", async (req, res, next) => {
     }
 });
 storageAlquiler.get("/:id?", async (req, res) => {
-    const jwt = req.session.jwt;
+    /* const jwt = req.session.jwt;
     const encoder = new TextEncoder();  
     const jwtData = await jwtVerify( 
         jwt,
         encoder.encode(process.env.JWT_PRIVATE_KEY)
-    )
-    // if (jwtData.payload.id && jwtData.payload.id !== req.params.id) {
-    //     return res.sendStatus(403);
-    // }
-
+    ) */
     const db = await getDB();
     const id = req.params.id
     let response;

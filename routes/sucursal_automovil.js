@@ -1,7 +1,7 @@
 import session from 'express-session';
 import { Router } from 'express';
 import { SignJWT, jwtVerify } from 'jose';
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import { getDB } from '../db/db.mjs';
 
 const storageSucursalAutomovil = Router();
@@ -35,24 +35,23 @@ storageSucursalAutomovil.use("/:id?", async (req, res, next) => {
     }
 });
 storageSucursalAutomovil.get("/:id?", async (req, res) => {
-    const jwt = req.session.jwt;
-    const encoder = new TextEncoder();  
-    const jwtData = await jwtVerify( 
-        jwt,
-        encoder.encode(process.env.JWT_PRIVATE_KEY)
-    )
-    if (jwtData.payload.id && jwtData.payload.id !== req.params.id) {
-        return res.sendStatus(403);
-    }
-    const db = getDB();
+    const db = await getDB();
+    const id = req.params.id
+    let response;
+    
+    response = (id) ? await getOne(db, id) : await getAll(db); 
+    res.json(response); 
+});
+
+const getAll = async(db) => {
     const collection = db.collection('sucursal_automovil');
     const sucursal_automoviles = await collection.find().toArray();
+    return sucursal_automoviles 
+}
 
-    res.json(sucursal_automoviles);
-
-
-    // let sql = (jwtData.payload.id) 
-    //     ? [`db.empleado.findById()`, jwtData.payload.id]  
-    //     : [`db.empleado.find()`];   
-})
+const getOne = async(db, id) => {
+    const collection = db.collection('sucursal_automovil');
+    const sucursal_automovil = await collection.findOne({_id: new ObjectId(id)});
+    return sucursal_automovil
+}
 export default storageSucursalAutomovil;
