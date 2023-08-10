@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { coneccion } from "../db/atlas.js";
 import { limitGet } from '../limit/config.js';
-import {appMiddlewareRegisEntVerify} from '../middleware/registro_entregamiddleware.js';
+import {appMiddlewareRegisEntVerify, appDTODataRegisEnt} from '../middleware/registro_entregamiddleware.js';
 let storageRegisEnt = Router();
 
-storageRegisEnt.get('/', limitGet(),  async(req, res)=>{
+storageRegisEnt.get('/', limitGet(), appMiddlewareRegisEntVerify ,async(req, res)=>{
     if(!req.rateLimit) return;
     let db = await coneccion();
     let registro_entrega = db.collection("registro_entrega");
@@ -12,7 +12,7 @@ storageRegisEnt.get('/', limitGet(),  async(req, res)=>{
     res.send(result)
 });
 
-storageRegisEnt.post('/', limitGet(), appMiddlewareRegisEntVerify, async(req, res) => {
+storageRegisEnt.post('/', limitGet(), appMiddlewareRegisEntVerify, appDTODataRegisEnt , async(req, res) => {
     let db = await coneccion();
     let registro_entrega = db.collection("registro_entrega");
     try {

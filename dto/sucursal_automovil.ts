@@ -2,26 +2,27 @@ import { Expose, Transform } from 'class-transformer';
 import { IsDefined } from 'class-validator';
 export class SucuAutomovil {
 
-    @Expose({ name: 'ID_Sucursal_id' })
+    @Expose({ name: 'branchID' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro sucursal es obligatorio` } } })
-    sucursalID: number;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro branchID es obligatorio` } } })
+    ID_Sucursal_id: number;
 
-    @Expose({ name: 'ID_Automovil_id' })
+    @Expose({ name: 'carID' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro sucursal es obligatorio` } } })
-    automovilID: number;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro carID es obligatorio` } } })
+    ID_Automovil_id: number;
 
-    @Expose({ name: 'Cantidad_Disponible' })
+    @Expose({ name: 'quantity_available' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro sucursal es obligatorio` } } })
-    cantidad: number;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro 
+    quantity_available es obligatorio` } } })
+    Cantidad_Disponible: number;
 
     constructor(data: Partial<SucuAutomovil>) {
         Object.assign(this, data);
-        this.sucursalID = 0;
-        this.automovilID = 0;
-        this.cantidad = 0;
+        this.ID_Sucursal_id = 0;
+        this.ID_Automovil_id = 0;
+        this.Cantidad_Disponible = 0;
         
     }
 

@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { coneccion } from "../db/atlas.js";
 import { limitGet } from '../limit/config.js';
-import {appMiddlewareSucuAutomovilVerify} from '../middleware/sucursal_automovilmiddleware.js';
+import {appMiddlewareSucuAutomovilVerify, appDTODataSucuAutomovil} from '../middleware/sucursal_automovilmiddleware.js';
 let storageSucuAutomovil = Router();
 
-storageSucuAutomovil.get('/', limitGet(),  async(req, res)=>{
+storageSucuAutomovil.get('/', limitGet(), appMiddlewareSucuAutomovilVerify ,async(req, res)=>{
     if(!req.rateLimit) return;
     // let {id} = req.body
     // { "_id": new ObjectId(id)}
@@ -14,7 +14,7 @@ storageSucuAutomovil.get('/', limitGet(),  async(req, res)=>{
     res.send(result)
 });
 
-storageSucuAutomovil.post('/', limitGet(), appMiddlewareSucuAutomovilVerify, async(req, res) => {
+storageSucuAutomovil.post('/', limitGet(), appMiddlewareSucuAutomovilVerify, appDTODataSucuAutomovil ,async(req, res) => {
     let db = await coneccion();
     let sucursal_automovil = db.collection("sucursal_automovil");
     try {

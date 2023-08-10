@@ -12,29 +12,32 @@ import { IsDefined } from 'class-validator';
 export class SucuAutomovil {
     constructor(data) {
         Object.assign(this, data);
-        this.sucursalID = 0;
-        this.automovilID = 0;
-        this.cantidad = 0;
+        this.ID_Sucursal_id = 0;
+        this.ID_Automovil_id = 0;
+        this.Cantidad_Disponible = 0;
     }
 }
 __decorate([
-    Expose({ name: 'ID_Sucursal_id' })
+    Expose({ name: 'branchID' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro sucursal es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro branchID es obligatorio` }; } }),
     __metadata("design:type", Number)
-], SucuAutomovil.prototype, "sucursalID", void 0);
+], SucuAutomovil.prototype, "ID_Sucursal_id", void 0);
 __decorate([
-    Expose({ name: 'ID_Automovil_id' })
+    Expose({ name: 'carID' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro sucursal es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro carID es obligatorio` }; } }),
     __metadata("design:type", Number)
-], SucuAutomovil.prototype, "automovilID", void 0);
+], SucuAutomovil.prototype, "ID_Automovil_id", void 0);
 __decorate([
-    Expose({ name: 'Cantidad_Disponible' })
+    Expose({ name: 'quantity_available' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro sucursal es obligatorio` }; } }),
+    IsDefined({ message: () => {
+            throw { status: 422, message: `El parametro 
+    quantity_available es obligatorio` };
+        } }),
     __metadata("design:type", Number)
-], SucuAutomovil.prototype, "cantidad", void 0);
+], SucuAutomovil.prototype, "Cantidad_Disponible", void 0);

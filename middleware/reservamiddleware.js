@@ -10,15 +10,10 @@ const appDTODataReserva = Router();
 appMiddlewareReservaVerify.use(async(req,res,next) => {
     if(!req.rateLimit) return;
     let {payload} = req.data;
-    delete payload.iat;
-    delete payload.exp;
-    
+    const{ iat, exp, ...newPayload } = payload;
+    payload = newPayload;
     let clone = JSON.stringify(classToPlain(plainToClass(Reserva, {}, { ignoreDecorators: true })));
     let verify = clone === JSON.stringify(payload);
-
-    console.log(payload);
-    console.log(clone);
-
     if(!verify) res.status(406).send({status: 406, message: "No Autorizado"})
     next();
 });

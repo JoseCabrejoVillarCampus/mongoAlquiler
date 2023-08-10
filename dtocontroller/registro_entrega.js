@@ -35,31 +35,31 @@ __decorate([
     __metadata("design:type", Number)
 ], RegisEnt.prototype, "ID_Alquiler_id", void 0);
 __decorate([
-    Expose({ name: 'ID_Empleado_id' })
+    Expose({ name: 'employed' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro empleado es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro employed es obligatorio` }; } }),
     __metadata("design:type", Number)
 ], RegisEnt.prototype, "ID_Empleado_id", void 0);
 __decorate([
-    Expose({ name: 'Fecha_Entrega' })
+    Expose({ name: 'delivery_date' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro entregaAuto es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro delivery_date es obligatorio` }; } }),
     __metadata("design:type", Date)
 ], RegisEnt.prototype, "Fecha_Entrega", void 0);
 __decorate([
-    Expose({ name: 'Combustible_Entregado' })
+    Expose({ name: 'delivery_fuel' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro combustible es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro delivery_fuel es obligatorio` }; } }),
     __metadata("design:type", Number)
 ], RegisEnt.prototype, "Combustible_Entregado", void 0);
 __decorate([
-    Expose({ name: 'Kilometraje_Entregado' })
+    Expose({ name: 'delivery_km' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro kilometraje es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro delivery_km es obligatorio` }; } }),
     __metadata("design:type", Number)
 ], RegisEnt.prototype, "Kilometraje_Entregado", void 0);
 ;

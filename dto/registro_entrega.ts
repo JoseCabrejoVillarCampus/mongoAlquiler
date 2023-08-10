@@ -12,24 +12,24 @@ export class RegisEnt {
     @IsDefined({ message: () => { throw { status: 422, message: `El parametro rentID es obligatorio` } } })
     ID_Alquiler_id: number;
 
-    @Expose({ name: 'ID_Empleado_id' })
+    @Expose({ name: 'employed' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro empleado es obligatorio` } } })
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro employed es obligatorio` } } })
     ID_Empleado_id: number;
 
-    @Expose({ name: 'Fecha_Entrega' })
+    @Expose({ name: 'delivery_date' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro entregaAuto es obligatorio` } } })
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro delivery_date es obligatorio` } } })
     Fecha_Entrega: Date;
 
-    @Expose({ name: 'Combustible_Entregado' })
+    @Expose({ name: 'delivery_fuel' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro combustible es obligatorio` } } })
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro delivery_fuel es obligatorio` } } })
     Combustible_Entregado: number;
 
-    @Expose({ name: 'Kilometraje_Entregado' })
+    @Expose({ name: 'delivery_km' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro kilometraje es obligatorio` } } })
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro delivery_km es obligatorio` } } })
     Kilometraje_Entregado: number;
 
     constructor(data: Partial<RegisEnt>) {
@@ -40,6 +40,5 @@ export class RegisEnt {
         this.Fecha_Entrega = new Date ;
         this.Combustible_Entregado = 0;
         this.Kilometraje_Entregado = 0;
-        
     }
 };
