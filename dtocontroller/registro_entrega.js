@@ -12,54 +12,54 @@ import { IsDefined } from 'class-validator';
 export class RegisEnt {
     constructor(data) {
         Object.assign(this, data);
-        this.alquilerID = 0;
-        this.alquiler = 0;
-        this.empleado = 0;
-        this.entregaAuto = new Date;
-        this.combustible = 0;
-        this.kilometraje = 0;
+        this.ID_Registro = 0;
+        this.ID_Alquiler_id = 0;
+        this.ID_Empleado_id = 0;
+        this.Fecha_Entrega = new Date;
+        this.Combustible_Entregado = 0;
+        this.Kilometraje_Entregado = 0;
     }
 }
 __decorate([
-    Expose({ name: 'ID_Registro' })
+    Expose({ name: 'recordID' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro alquilerID es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro recordID es obligatorio` }; } }),
     __metadata("design:type", Number)
-], RegisEnt.prototype, "alquilerID", void 0);
+], RegisEnt.prototype, "ID_Registro", void 0);
 __decorate([
-    Expose({ name: 'ID_Alquiler_id' })
+    Expose({ name: 'rentID' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro alquiler es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro rentID es obligatorio` }; } }),
     __metadata("design:type", Number)
-], RegisEnt.prototype, "alquiler", void 0);
+], RegisEnt.prototype, "ID_Alquiler_id", void 0);
 __decorate([
     Expose({ name: 'ID_Empleado_id' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
     IsDefined({ message: () => { throw { status: 422, message: `El parametro empleado es obligatorio` }; } }),
     __metadata("design:type", Number)
-], RegisEnt.prototype, "empleado", void 0);
+], RegisEnt.prototype, "ID_Empleado_id", void 0);
 __decorate([
     Expose({ name: 'Fecha_Entrega' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
     IsDefined({ message: () => { throw { status: 422, message: `El parametro entregaAuto es obligatorio` }; } }),
     __metadata("design:type", Date)
-], RegisEnt.prototype, "entregaAuto", void 0);
+], RegisEnt.prototype, "Fecha_Entrega", void 0);
 __decorate([
     Expose({ name: 'Combustible_Entregado' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
     IsDefined({ message: () => { throw { status: 422, message: `El parametro combustible es obligatorio` }; } }),
     __metadata("design:type", Number)
-], RegisEnt.prototype, "combustible", void 0);
+], RegisEnt.prototype, "Combustible_Entregado", void 0);
 __decorate([
     Expose({ name: 'Kilometraje_Entregado' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
     IsDefined({ message: () => { throw { status: 422, message: `El parametro kilometraje es obligatorio` }; } }),
     __metadata("design:type", Number)
-], RegisEnt.prototype, "kilometraje", void 0);
+], RegisEnt.prototype, "Kilometraje_Entregado", void 0);
 ;

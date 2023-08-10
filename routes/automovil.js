@@ -1,18 +1,18 @@
 import { Router } from 'express';
 import { coneccion } from "../db/atlas.js";
 import { limitGet } from '../limit/config.js';
-import {appMiddlewareAutomovilVerify} from '../middleware/automovilmiddleware.js';
+import {appMiddlewareAutomovilVerify, appDTODataAutomovil} from '../middleware/automovilmiddleware.js';
 let storageAutomovil = Router();
 
-storageAutomovil.get('/', limitGet(),  async(req, res)=>{
+storageAutomovil.get('/', limitGet(), appMiddlewareAutomovilVerify, async(req, res)=>{
     if(!req.rateLimit) return;
     let db = await coneccion();
     let automovil = db.collection("automovil");
-    let result = await automovil.find().toArray();
+    let result = await automovil.find().toArray(); 
     res.send(result)
 });
 
-storageAutomovil.post('/', limitGet(), appMiddlewareAutomovilVerify, async(req, res) => {
+storageAutomovil.post('/', limitGet(), appMiddlewareAutomovilVerify, appDTODataAutomovil, async(req, res) => {
     let db = await coneccion();
     let automovil = db.collection("automovil");
     try {

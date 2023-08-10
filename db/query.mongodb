@@ -6,25 +6,25 @@ db.createCollection("sucursal", {
     validator: {
     $jsonSchema: {
         bsonType: "object",
-        required: ["ID_Sucursal", "Nombre", "Direccion", "Telefono"],
+        required: [ "direccion", "sucursal", "nombre", "telefono"],
         properties: {
-            ID_Sucursal: {
+            sucursal: {
                 bsonType: "int",
                 minimum: 0,
                 maximum: 20,
                 description: "El campo ID_Sucursal debe ser un número y estar comprendido entre 0 y 20",
             },
-            Nombre: {
+            nombre: {
                 bsonType: "string",
                 pattern: "^[A-Za-z\\s]+$",
                 description: "Debe informar el campo nombre y este debe ser un string",
             },
-            Direccion: {
+            direccion: {
                 bsonType: "string",
                 pattern: "^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ,.#@\\s-]+$",
                 description: "Debe informar el campo direccion y este debe ser un string",
             },
-            Telefono: {
+            telefono: {
                 bsonType: "string",
                 pattern: "^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ,.#@\\s-]+$",
                 description: "Debe informar el campo telefono y este debe ser un string",
@@ -36,35 +36,29 @@ db.createCollection("sucursal", {
 use("db_campus_alquiler");
 db.sucursal.insertMany([
   {
-    ID_Sucursal: 1,
-    Nombre: "Bucaramanga",
-    Direccion: "calle 15# 21",
-    Telefono: "3127240173",
+    sucursal: 1,
+    nombre: "Bucaramanga",
+    direccion: "calle 15# 21",
+    telefono: "3127240173",
   },
   {
-    ID_Sucursal: 2,
-    Nombre: "Medellin",
-    Direccion: "calle 143# 31",
-    Telefono: "312753453",
+    sucursal: 2,
+    nombre: "Medellin",
+    direccion: "calle 143# 31",
+    telefono: "312753453",
   },
   {
-    ID_Sucursal: 3,
-    Nombre: "Sincelejo",
-    Direccion: "carrera 1# 14",
-    Telefono: "3123456754",
+    sucursal: 3,
+    nombre: "Sincelejo",
+    direccion: "carrera 1# 14",
+    telefono: "3123456754",
   },
   {
-    ID_Sucursal: 4,
-    Nombre: "Barranquilla",
-    Direccion: "carrera 34 #11",
-    Telefono: "312900909",
-  },
-  {
-    ID_Sucursal: 5,
-    Nombre: "Tolu",
-    Direccion: "calle 26# 41",
-    Telefono: "3203443434",
-  },
+    sucursal: 4,
+    nombre: "Barranquilla",
+    direccion: "carrera 34 #11",
+    telefono: "312900909",
+  }
 ]);
 use("db_campus_alquiler");
 db.createCollection("sucursal_automovil", {

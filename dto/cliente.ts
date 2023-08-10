@@ -2,50 +2,50 @@ import { Expose, Transform } from 'class-transformer';
 import { IsDefined } from 'class-validator';
 export class Cliente {
 
-    @Expose({ name: 'ID_Cliente' })
+    @Expose({ name: 'client' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro cliente es obligatorio` } } })
-    cliente: number;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro client es obligatorio` } } })
+    ID_Cliente: number;
 
-    @Expose({ name: 'Nombre' })
+    @Expose({ name: 'name' })
     // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro nombre es obligatorio` } } })
-    nombre: string;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro name es obligatorio` } } })
+    Nombre: string;
 
-    @Expose({ name: 'Apellido' })
+    @Expose({ name: 'surname' })
     // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro apellido es obligatorio` } } })
-    apellido: string;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro surname es obligatorio` } } })
+    Apellido: string;
 
-    @Expose({ name: 'DNI' })
+    @Expose({ name: 'identification' })
     // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro identificacion es obligatorio` } } })
-    identificacion: string;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro identification es obligatorio` } } })
+    DNI: string;
 
-    @Expose({ name: 'Direccion' })
+    @Expose({ name: 'address' })
     // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro direccion es obligatorio` } } })
-    direccion: string;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro address es obligatorio` } } })
+    Direccion: string;
 
-    @Expose({ name: 'Telefono' })
+    @Expose({ name: 'phonenumber' })
     // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro telefono es obligatorio` } } })
-    telefono: string;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro phonenumber es obligatorio` } } })
+    Telefono: string;
 
-    @Expose({ name: 'Email' })
+    @Expose({ name: 'emailAddress' })
     // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro email es obligatorio` } } })
-    email: string;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro emailAddress es obligatorio` } } })
+    Email: string;
 
     constructor(data: Partial<Cliente>) {
         Object.assign(this, data);
-        this.cliente = 0;
-        this.nombre = "";
-        this.apellido = "";
-        this.identificacion = "";
-        this.direccion = "";
-        this.telefono = "";
-        this.email = "";
+        this.ID_Cliente = 0;
+        this.Nombre = "";
+        this.Apellido = "";
+        this.DNI = "";
+        this.Direccion = "";
+        this.Telefono = "";
+        this.Email = "";
         
     }
 };

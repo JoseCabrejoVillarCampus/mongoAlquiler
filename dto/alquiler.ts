@@ -2,50 +2,50 @@ import { Expose, Transform } from 'class-transformer';
 import { IsDefined } from 'class-validator';
 export class Alquiler {
 
-    @Expose({ name: 'ID_Alquiler' })
+    @Expose({ name: 'rent' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro alquilerID es obligatorio` } } })
-    alquilerID: number;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro rent es obligatorio` } } })
+    ID_Alquiler: number;
 
-    @Expose({ name: 'ID_Cliente_id' })
+    @Expose({ name: 'client' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro clienteID es obligatorio` } } })
-    clienteID: number;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro client es obligatorio` } } })
+    ID_Cliente_id: number;
 
-    @Expose({ name: 'ID_Automovil_id' })
+    @Expose({ name: 'car' }) 
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro automovilID es obligatorio` } } })
-    automovilID: number;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro car es obligatorio` } } })
+    ID_Automovil_id: number;
 
-    @Expose({ name: 'Fecha_Inicio' })
+    @Expose({ name: 'initDate' }) 
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro inicioReserva es obligatorio` } } })
-    inicioReserva: Date;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro initDate es obligatorio` } } })
+    Fecha_Inicio: Date;
 
-    @Expose({ name: 'Fecha_Fin' })
+    @Expose({ name: 'endDate' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro finReserva es obligatorio` } } })
-    finReserva: Date;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro endDate es obligatorio` } } })
+    Fecha_Fin: Date;
 
-    @Expose({ name: 'Costo_Total' })
+    @Expose({ name: 'totalCost' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro total es obligatorio` } } })
-    total: number;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro totalCost es obligatorio` } } })
+    Costo_Total: number;
 
-    @Expose({ name: 'Estado' })
+    @Expose({ name: 'estate' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro estado es obligatorio` } } })
-    estado: string;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro estate es obligatorio` } } })
+    Estado: string;
 
     constructor(data: Partial<Alquiler>) {
         Object.assign(this, data);
-        this.alquilerID = 0;
-        this.clienteID = 0;
-        this.automovilID = 0;
-        this.inicioReserva = new Date ;
-        this.finReserva = new Date;
-        this.total = 0;
-        this.estado = "";
+        this.ID_Alquiler = 0;
+        this.ID_Cliente_id = 0;
+        this.ID_Automovil_id = 0;
+        this.Fecha_Inicio = new Date ;
+        this.Fecha_Fin = new Date;
+        this.Costo_Total = 0;
+        this.Estado = "";
         
     }
 };

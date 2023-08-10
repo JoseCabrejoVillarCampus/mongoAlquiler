@@ -2,50 +2,49 @@ import { Expose, Transform } from 'class-transformer';
 import { IsDefined } from 'class-validator';
 export class RegisDevo {
 
-    @Expose({ name: 'ID_Registro' })
+    @Expose({ name: 'record' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro alquilerID es obligatorio` } } })
-    alquilerID: number;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro record es obligatorio` } } })
+    ID_Registro: number;
 
-    @Expose({ name: 'ID_Alquiler_id' })
+    @Expose({ name: 'renID' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro alquiler es obligatorio` } } })
-    alquiler: number;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro renID es obligatorio` } } })
+    ID_Alquiler_id: number;
 
-    @Expose({ name: 'ID_Empleado_id' })
+    @Expose({ name: 'employees' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro empleado es obligatorio` } } })
-    empleado: number;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro employees es obligatorio` } } })
+    ID_Empleado_id: number;
 
-    @Expose({ name: 'Fecha_Devolucion' })
+    @Expose({ name: 'return_date' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro devolucionAuto es obligatorio` } } })
-    devolucionAuto: Date;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro return_date es obligatorio` } } })
+    Fecha_Devolucion: Date;
 
-    @Expose({ name: 'Combustible_Devuelto' })
+    @Expose({ name: 'fuel_returned' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro combustibleEntregado es obligatorio` } } })
-    combustibleEntregado: number;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro fuel_returned es obligatorio` } } })
+    Combustible_Devuelto: number;
 
-    @Expose({ name: 'Kilometraje_Devuelto' })
+    @Expose({ name: 'mileage_returned' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro kilometraje es obligatorio` } } })
-    kilometraje: number;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro mileage_returned es obligatorio` } } })
+    Kilometraje_Devuelto: number;
 
-    @Expose({ name: 'Monto_Adicional' })
+    @Expose({ name: 'additional_amount' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro adicionales es obligatorio` } } })
-    adicionales: number;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro additional_amount es obligatorio` } } })
+    Monto_Adicional: number;
 
     constructor(data: Partial<RegisDevo>) {
         Object.assign(this, data);
-        this.alquilerID = 0;
-        this.alquiler = 0;
-        this.empleado = 0;
-        this.devolucionAuto = new Date ;
-        this.combustibleEntregado = 0;
-        this.kilometraje = 0;
-        this.adicionales = 0;
-        
+        this.ID_Registro = 0;
+        this.ID_Alquiler_id = 0;
+        this.ID_Empleado_id = 0;
+        this.Fecha_Devolucion = new Date ;
+        this.Combustible_Devuelto = 0;
+        this.Kilometraje_Devuelto = 0;
+        this.Monto_Adicional = 0;
     }
 };

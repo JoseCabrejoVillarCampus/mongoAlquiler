@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { coneccion } from "../db/atlas.js";
 import { limitGet } from '../limit/config.js';
-import {appMiddlewareEmpleadoVerify} from '../middleware/empleadomiddleware.js';
+import {appMiddlewareEmpleadoVerify, appDTODataEmpleado} from '../middleware/empleadomiddleware.js';
 let storageEmpleado = Router();
 
-storageEmpleado.get('/', limitGet(),  async(req, res)=>{
+storageEmpleado.get('/', limitGet(), appMiddlewareEmpleadoVerify , async(req, res)=>{
     if(!req.rateLimit) return;
     let db = await coneccion();
     let empleado = db.collection("empleado");
@@ -12,7 +12,7 @@ storageEmpleado.get('/', limitGet(),  async(req, res)=>{
     res.send(result)
 });
 
-storageEmpleado.post('/', limitGet(), appMiddlewareEmpleadoVerify, async(req, res) => {
+storageEmpleado.post('/', limitGet(), appMiddlewareEmpleadoVerify, appDTODataEmpleado ,async(req, res) => {
     let db = await coneccion();
     let empleado = db.collection("empleado");
     try {

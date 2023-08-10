@@ -1,9 +1,10 @@
 import 'reflect-metadata';
 import { plainToClass, classToPlain } from 'class-transformer';
 import { Cliente } from '../dtocontroller/cliente.js';
+import {validate} from 'class-validator';
 import { Router } from "express";
 const appMiddlewareClienteVerify = Router()
-
+const appDTODataCliente = Router();
 
 appMiddlewareClienteVerify.use(async(req,res,next) => {
     if(!req.rateLimit) return;
@@ -22,6 +23,19 @@ appMiddlewareClienteVerify.use(async(req,res,next) => {
 }
 );
 
+appDTODataCliente.use( async(req,res,next)=>{
+    try {
+        let data = plainToClass(Cliente, req.body);
+        await validate(data);
+        req.body = JSON.parse(JSON.stringify(data));
+        req.data= undefined;
+        next();
+    } catch (error) {
+        res.status(error.status).send(error)
+    }
+})
+
 export { 
-    appMiddlewareClienteVerify
+    appMiddlewareClienteVerify,
+    appDTODataCliente
 };

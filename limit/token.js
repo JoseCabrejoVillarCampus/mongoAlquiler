@@ -34,7 +34,7 @@ appToken.use('/:collection' ,async(req,res)=>{
     }
 });
 
-appVerify.post("/", async(req,res, next)=>{
+appVerify.use("/", async(req,res, next)=>{
     const {authorization} = req.headers;
     if (!authorization) return res.status(400).send({status: 400, token: "Token no enviado"});
     try {

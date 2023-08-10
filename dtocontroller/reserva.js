@@ -12,62 +12,65 @@ import { IsDefined } from 'class-validator';
 export class Reserva {
     constructor(data) {
         Object.assign(this, data);
-        this.sucursalID = 0;
-        this.clienteID = 0;
-        this.automovilID = 0;
-        this.diaReserva = new Date;
-        this.inicio = new Date;
-        this.finReserva = new Date;
-        this.estado = "";
+        this.ID_Reserva = 0;
+        this.ID_Cliente_id = 0;
+        this.ID_Automovil_id = 0;
+        this.Fecha_Reserva = new Date;
+        this.Fecha_Inicio = new Date;
+        this.Fecha_Fin = new Date;
+        this.Estado = "";
     }
 }
 __decorate([
-    Expose({ name: 'ID_Reserva' })
+    Expose({ name: 'bookingID' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro sucursal es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro bookingID es obligatorio` }; } }),
     __metadata("design:type", Number)
-], Reserva.prototype, "sucursalID", void 0);
+], Reserva.prototype, "ID_Reserva", void 0);
 __decorate([
-    Expose({ name: 'ID_Cliente_id' })
+    Expose({ name: 'clientID' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro clienteID es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro clientID es obligatorio` }; } }),
     __metadata("design:type", Number)
-], Reserva.prototype, "clienteID", void 0);
+], Reserva.prototype, "ID_Cliente_id", void 0);
 __decorate([
-    Expose({ name: 'ID_Automovil_id' })
+    Expose({ name: 'carID' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro automovilID es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro carID es obligatorio` }; } }),
     __metadata("design:type", Number)
-], Reserva.prototype, "automovilID", void 0);
+], Reserva.prototype, "ID_Automovil_id", void 0);
 __decorate([
-    Expose({ name: 'Fecha_Reserva' })
+    Expose({ name: 'reservation_date' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro diaReserva es obligatorio` }; } }),
+    IsDefined({ message: () => {
+            throw { status: 422, message: `El parametro reservation_date
+    es obligatorio` };
+        } }),
     __metadata("design:type", Date)
-], Reserva.prototype, "diaReserva", void 0);
+], Reserva.prototype, "Fecha_Reserva", void 0);
 __decorate([
-    Expose({ name: 'Fecha_Inicio' })
+    Expose({ name: 'start_date' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro inicio es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro start_date es obligatorio` }; } }),
     __metadata("design:type", Date)
-], Reserva.prototype, "inicio", void 0);
+], Reserva.prototype, "Fecha_Inicio", void 0);
 __decorate([
-    Expose({ name: 'Fecha_Fin' })
+    Expose({ name: 'end_date' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro finReserva es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro end_date es obligatorio` }; } }),
     __metadata("design:type", Date)
-], Reserva.prototype, "finReserva", void 0);
+], Reserva.prototype, "Fecha_Fin", void 0);
 __decorate([
-    Expose({ name: 'Estado' })
+    Expose({ name: 'estate' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro estado es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro estate es obligatorio` }; } }),
     __metadata("design:type", String)
-], Reserva.prototype, "estado", void 0);
+], Reserva.prototype, "Estado", void 0);
 ;

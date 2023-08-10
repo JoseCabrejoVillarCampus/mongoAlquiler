@@ -12,62 +12,62 @@ import { IsDefined } from 'class-validator';
 export class Cliente {
     constructor(data) {
         Object.assign(this, data);
-        this.cliente = 0;
-        this.nombre = "";
-        this.apellido = "";
-        this.identificacion = "";
-        this.direccion = "";
-        this.telefono = "";
-        this.email = "";
+        this.ID_Cliente = 0;
+        this.Nombre = "";
+        this.Apellido = "";
+        this.DNI = "";
+        this.Direccion = "";
+        this.Telefono = "";
+        this.Email = "";
     }
 }
 __decorate([
-    Expose({ name: 'ID_Cliente' })
+    Expose({ name: 'client' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro cliente es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro client es obligatorio` }; } }),
     __metadata("design:type", Number)
-], Cliente.prototype, "cliente", void 0);
+], Cliente.prototype, "ID_Cliente", void 0);
 __decorate([
-    Expose({ name: 'Nombre' })
+    Expose({ name: 'name' })
     // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro nombre es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro name es obligatorio` }; } }),
     __metadata("design:type", String)
-], Cliente.prototype, "nombre", void 0);
+], Cliente.prototype, "Nombre", void 0);
 __decorate([
-    Expose({ name: 'Apellido' })
+    Expose({ name: 'surname' })
     // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro apellido es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro surname es obligatorio` }; } }),
     __metadata("design:type", String)
-], Cliente.prototype, "apellido", void 0);
+], Cliente.prototype, "Apellido", void 0);
 __decorate([
-    Expose({ name: 'DNI' })
+    Expose({ name: 'identification' })
     // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro identificacion es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro identification es obligatorio` }; } }),
     __metadata("design:type", String)
-], Cliente.prototype, "identificacion", void 0);
+], Cliente.prototype, "DNI", void 0);
 __decorate([
-    Expose({ name: 'Direccion' })
+    Expose({ name: 'address' })
     // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro direccion es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro address es obligatorio` }; } }),
     __metadata("design:type", String)
-], Cliente.prototype, "direccion", void 0);
+], Cliente.prototype, "Direccion", void 0);
 __decorate([
-    Expose({ name: 'Telefono' })
+    Expose({ name: 'phonenumber' })
     // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro telefono es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro phonenumber es obligatorio` }; } }),
     __metadata("design:type", String)
-], Cliente.prototype, "telefono", void 0);
+], Cliente.prototype, "Telefono", void 0);
 __decorate([
-    Expose({ name: 'Email' })
+    Expose({ name: 'emailAddress' })
     // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro email es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro emailAddress es obligatorio` }; } }),
     __metadata("design:type", String)
-], Cliente.prototype, "email", void 0);
+], Cliente.prototype, "Email", void 0);
 ;

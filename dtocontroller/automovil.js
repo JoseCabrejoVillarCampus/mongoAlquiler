@@ -12,61 +12,61 @@ import { IsDefined } from 'class-validator';
 export class Automovil {
     constructor(data) {
         Object.assign(this, data);
-        this.automovilID = 0;
-        this.marca = "";
-        this.modelo = "";
-        this.anio = 0;
-        this.tipo = "";
-        this.capacidad = 0;
-        this.precio = 0;
+        this.ID_Automovil = 0;
+        this.Marca = "";
+        this.Modelo = "";
+        this.Anio = 0;
+        this.Tipo = "";
+        this.Capacidad = 0;
+        this.Precio_Diario = 0;
     }
 }
 __decorate([
-    Expose({ name: 'ID_Automovil' })
+    Expose({ name: 'car' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro automovilID es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro car es obligatorio` }; } }),
     __metadata("design:type", Number)
-], Automovil.prototype, "automovilID", void 0);
+], Automovil.prototype, "ID_Automovil", void 0);
 __decorate([
-    Expose({ name: 'Marca' })
+    Expose({ name: 'brand' })
+    // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}}) 
+    ,
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro brand es obligatorio` }; } }),
+    __metadata("design:type", String)
+], Automovil.prototype, "Marca", void 0);
+__decorate([
+    Expose({ name: 'model' })
     // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro marca es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro model es obligatorio` }; } }),
     __metadata("design:type", String)
-], Automovil.prototype, "marca", void 0);
+], Automovil.prototype, "Modelo", void 0);
 __decorate([
-    Expose({ name: 'Modelo' })
+    Expose({ name: 'year' })
+    // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
+    ,
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro year es obligatorio` }; } }),
+    __metadata("design:type", Number)
+], Automovil.prototype, "Anio", void 0);
+__decorate([
+    Expose({ name: 'tipe' })
     // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro modelo es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro tipe es obligatorio` }; } }),
     __metadata("design:type", String)
-], Automovil.prototype, "modelo", void 0);
+], Automovil.prototype, "Tipo", void 0);
 __decorate([
-    Expose({ name: 'Anio' })
+    Expose({ name: 'stalls' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro anio es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro stalls es obligatorio` }; } }),
     __metadata("design:type", Number)
-], Automovil.prototype, "anio", void 0);
+], Automovil.prototype, "Capacidad", void 0);
 __decorate([
-    Expose({ name: 'Tipo' })
-    // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
-    ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro tipo es obligatorio` }; } }),
-    __metadata("design:type", String)
-], Automovil.prototype, "tipo", void 0);
-__decorate([
-    Expose({ name: 'Capacidad' })
+    Expose({ name: 'price' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro capacidad es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro price es obligatorio` }; } }),
     __metadata("design:type", Number)
-], Automovil.prototype, "capacidad", void 0);
-__decorate([
-    Expose({ name: 'Precio_Diario' })
-    // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro precio es obligatorio` }; } }),
-    __metadata("design:type", Number)
-], Automovil.prototype, "precio", void 0);
+], Automovil.prototype, "Precio_Diario", void 0);

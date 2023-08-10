@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { coneccion } from "../db/atlas.js";
 import { limitGet } from '../limit/config.js';
-import {appMiddlewareAlquilerVerify} from '../middleware/alquilermiddleware.js';
+import {appMiddlewareAlquilerVerify, appDTODataAlquiler} from '../middleware/alquilermiddleware.js';
 let storageAlquiler = Router();
 
-storageAlquiler.get('/', limitGet(),  async(req, res)=>{
+storageAlquiler.get('/', limitGet(), appMiddlewareAlquilerVerify ,async(req, res)=>{
     if(!req.rateLimit) return;
     let db = await coneccion();
     let alquiler = db.collection("alquiler");
@@ -12,7 +12,7 @@ storageAlquiler.get('/', limitGet(),  async(req, res)=>{
     res.send(result)
 });
 
-storageAlquiler.post('/', limitGet(), appMiddlewareAlquilerVerify, async(req, res) => {
+storageAlquiler.post('/', limitGet(), appMiddlewareAlquilerVerify, appDTODataAlquiler , async(req, res) => {
     let db = await coneccion();
     let alquiler = db.collection("alquiler");
     try {

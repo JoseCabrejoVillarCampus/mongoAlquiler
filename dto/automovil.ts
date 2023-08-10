@@ -2,50 +2,50 @@ import { Expose, Transform } from 'class-transformer';
 import { IsDefined } from 'class-validator';
 export class Automovil {
 
-    @Expose({ name: 'ID_Automovil' })
+    @Expose({ name: 'car' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro automovilID es obligatorio` } } })
-    automovilID: number;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro car es obligatorio` } } })
+    ID_Automovil: number;
 
-    @Expose({ name: 'Marca' })
+    @Expose({ name: 'brand' })
+    // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}}) 
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro brand es obligatorio` } } })
+    Marca: string;
+
+    @Expose({ name: 'model' })
     // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro marca es obligatorio` } } })
-    marca: string;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro model es obligatorio` } } })
+    Modelo: string;
 
-    @Expose({ name: 'Modelo' })
+    @Expose({ name: 'year' })
+    // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro year es obligatorio` } } })
+    Anio: number;
+
+    @Expose({ name: 'tipe' })
     // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro modelo es obligatorio` } } })
-    modelo: string;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro tipe es obligatorio` } } })
+    Tipo: string;
 
-    @Expose({ name: 'Anio' })
+    @Expose({ name: 'stalls' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro anio es obligatorio` } } })
-    anio: number;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro stalls es obligatorio` } } })
+    Capacidad: number;
 
-    @Expose({ name: 'Tipo' })
-    // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro tipo es obligatorio` } } })
-    tipo: string;
-
-    @Expose({ name: 'Capacidad' })
+    @Expose({ name: 'price' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro capacidad es obligatorio` } } })
-    capacidad: number;
-
-    @Expose({ name: 'Precio_Diario' })
-    // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
-    @IsDefined({ message: () => { throw { status: 422, message: `El parametro precio es obligatorio` } } })
-    precio: number;
+    @IsDefined({ message: () => { throw { status: 422, message: `El parametro price es obligatorio` } } })
+    Precio_Diario: number;
 
     constructor(data: Partial<Automovil>) {
         Object.assign(this, data);
-        this.automovilID = 0;
-        this.marca = "";
-        this.modelo = "";
-        this.anio = 0;
-        this.tipo = "";
-        this.capacidad = 0;
-        this.precio = 0;
+        this.ID_Automovil = 0;
+        this.Marca = "";
+        this.Modelo = "";
+        this.Anio = 0;
+        this.Tipo = "";
+        this.Capacidad = 0;
+        this.Precio_Diario = 0;
         
     }
 
