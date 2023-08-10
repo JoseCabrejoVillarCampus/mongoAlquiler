@@ -1,58 +1,28 @@
-import session from 'express-session';
 import { Router } from 'express';
-import { SignJWT, jwtVerify } from 'jose';
-import { MongoClient, ObjectId } from 'mongodb';
-import { getDB } from '../db/db.mjs';
+import { coneccion } from "../db/atlas.js";
+import { limitGet } from '../limit/config.js';
+import {appMiddlewareRegisDevoVerify} from '../middleware/registro_devolucionmiddleware.js';
+let storageRegisDevo = Router();
 
-const storageRegistroDevolucion = Router();
-let con = undefined;
+storageRegisDevo.get('/', limitGet(),  async(req, res)=>{
+    if(!req.rateLimit) return;
+    let db = await coneccion();
+    let registro_devolucion = db.collection("registro_devolucion");
+    let result = await registro_devolucion.find().toArray();
+    res.send(result)
+});
 
-storageRegistroDevolucion.use(session({
-    secret: 'mi-secreto',
-    resave: false,
-    saveUninitialized: true,   
-}));
-
-
-storageRegistroDevolucion.use("/:id?", async (req, res, next) => {
-    try {  
-        const encoder = new TextEncoder();
-        const payload = { body: req.body, params: req.params, id: req.params.id  };
-        const jwtconstructor = new SignJWT(payload);
-        const jwt = await jwtconstructor 
-            .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-            .setIssuedAt()
-            .setExpirationTime("1h")
-            .sign(encoder.encode(process.env.JWT_PRIVATE_KEY)); 
-        req.body = payload.body;
-        req.session.jwt = jwt;
-        const maxAgeInSeconds = 3600;
-        res.cookie('token', jwt, { httpOnly: true, maxAge: maxAgeInSeconds * 1000 });
-        next();  
-    } catch (err) { 
-        console.error('Error al generar el JWT:', err.message);
-        res.sendStatus(500); 
+storageRegisDevo.post('/', limitGet(), appMiddlewareRegisDevoVerify, async(req, res) => {
+    let db = await coneccion();
+    let registro_devolucion = db.collection("registro_devolucion");
+    try {
+        let result = await registro_devolucion.insertOne(req.body);
+        console.log(result);
+        res.send("registro_devolucion Ingresado");
+    } catch (error) {
+        console.log(error.errInfo.details.schemaRulesNotSatisfied['0']);
+        res.send("No Fue Posible Ingresar el registro_devolucion");
     }
-});
-storageRegistroDevolucion.get("/:id?", async (req, res) => {
-    const db = await getDB();
-    const id = req.params.id
-    let response;
-    
-    response = (id) ? await getOne(db, id) : await getAll(db); 
-    res.json(response); 
-});
+})
 
-const getAll = async(db) => {
-    const collection = db.collection('registro_devolucion');
-    const registro_devoluciones = await collection.find().toArray();
-    return registro_devoluciones 
-}
-
-const getOne = async(db, id) => {
-    const collection = db.collection('registro_devolucion');
-    const registro_devolucion = await collection.findOne({_id: new ObjectId(id)});
-    return registro_devolucion
-}
-
-export default storageRegistroDevolucion;
+export default storageRegisDevo;

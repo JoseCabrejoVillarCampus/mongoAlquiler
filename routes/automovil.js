@@ -1,58 +1,28 @@
-import session from 'express-session';
 import { Router } from 'express';
-import { SignJWT, jwtVerify } from 'jose';
-import { MongoClient, ObjectId } from 'mongodb';
-import { getDB } from '../db/db.mjs';
+import { coneccion } from "../db/atlas.js";
+import { limitGet } from '../limit/config.js';
+import {appMiddlewareAutomovilVerify} from '../middleware/automovilmiddleware.js';
+let storageAutomovil = Router();
 
-const storageAutomovil = Router();
-let con = undefined;
+storageAutomovil.get('/', limitGet(),  async(req, res)=>{
+    if(!req.rateLimit) return;
+    let db = await coneccion();
+    let automovil = db.collection("automovil");
+    let result = await automovil.find().toArray();
+    res.send(result)
+});
 
-storageAutomovil.use(session({
-    secret: 'mi-secreto',
-    resave: false,
-    saveUninitialized: true,   
-}));
-
-
-storageAutomovil.use("/:id?", async (req, res, next) => {
-    try {  
-        const encoder = new TextEncoder();
-        const payload = { body: req.body, params: req.params, id: req.params.id  };
-        const jwtconstructor = new SignJWT(payload);
-        const jwt = await jwtconstructor 
-            .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-            .setIssuedAt()
-            .setExpirationTime("1h")
-            .sign(encoder.encode(process.env.JWT_PRIVATE_KEY)); 
-        req.body = payload.body;
-        req.session.jwt = jwt;
-        const maxAgeInSeconds = 3600;
-        res.cookie('token', jwt, { httpOnly: true, maxAge: maxAgeInSeconds * 1000 });
-        next();  
-    } catch (err) { 
-        console.error('Error al generar el JWT:', err.message);
-        res.sendStatus(500); 
+storageAutomovil.post('/', limitGet(), appMiddlewareAutomovilVerify, async(req, res) => {
+    let db = await coneccion();
+    let automovil = db.collection("automovil");
+    try {
+        let result = await automovil.insertOne(req.body);
+        console.log(result);
+        res.send("automovil Ingresado");
+    } catch (error) {
+        console.log(error.errInfo.details.schemaRulesNotSatisfied['0']);
+        res.send("No Fue Posible Ingresar el automovil");
     }
-});
-storageAutomovil.get("/:id?", async (req, res) => {
-    const db = await getDB();
-    const id = req.params.id
-    let response;
-    
-    response = (id) ? await getOne(db, id) : await getAll(db); 
-    res.json(response); 
-});
-
-const getAll = async(db) => {
-    const collection = db.collection('automovil');
-    const automoviles = await collection.find().toArray();
-    return automoviles 
-}
-
-const getOne = async(db, id) => {
-    const collection = db.collection('automovil');
-    const automovil = await collection.findOne({_id: new ObjectId(id)});
-    return automovil
-}
+})
 
 export default storageAutomovil;

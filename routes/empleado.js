@@ -1,57 +1,28 @@
-import session from 'express-session';
 import { Router } from 'express';
-import { SignJWT, jwtVerify } from 'jose';
-import { MongoClient, ObjectId } from 'mongodb';
-import { getDB } from '../db/db.mjs';
+import { coneccion } from "../db/atlas.js";
+import { limitGet } from '../limit/config.js';
+import {appMiddlewareEmpleadoVerify} from '../middleware/empleadomiddleware.js';
+let storageEmpleado = Router();
 
-const storageEmpleado = Router();
-let con = undefined;
+storageEmpleado.get('/', limitGet(),  async(req, res)=>{
+    if(!req.rateLimit) return;
+    let db = await coneccion();
+    let empleado = db.collection("empleado");
+    let result = await empleado.find().toArray();
+    res.send(result)
+});
 
-storageEmpleado.use(session({
-    secret: 'mi-secreto',
-    resave: false,
-    saveUninitialized: true,   
-}));
-
-
-storageEmpleado.use("/:id?", async (req, res, next) => {
-    try {  
-        const encoder = new TextEncoder();
-        const payload = { body: req.body, params: req.params, id: req.params.id  };
-        const jwtconstructor = new SignJWT(payload);
-        const jwt = await jwtconstructor 
-            .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-            .setIssuedAt()
-            .setExpirationTime("1h")
-            .sign(encoder.encode(process.env.JWT_PRIVATE_KEY)); 
-        req.body = payload.body;
-        req.session.jwt = jwt;
-        const maxAgeInSeconds = 3600;
-        res.cookie('token', jwt, { httpOnly: true, maxAge: maxAgeInSeconds * 1000 });
-        next();  
-    } catch (err) { 
-        console.error('Error al generar el JWT:', err.message);
-        res.sendStatus(500); 
+storageEmpleado.post('/', limitGet(), appMiddlewareEmpleadoVerify, async(req, res) => {
+    let db = await coneccion();
+    let empleado = db.collection("empleado");
+    try {
+        let result = await empleado.insertOne(req.body);
+        console.log(result);
+        res.send("empleado Ingresado");
+    } catch (error) {
+        console.log(error.errInfo.details.schemaRulesNotSatisfied['0']);
+        res.send("No Fue Posible Ingresar el empleado");
     }
-});
-storageEmpleado.get("/:id?", async (req, res) => {
-    const db = await getDB();
-    const id = req.params.id
-    let response;
-    
-    response = (id) ? await getOne(db, id) : await getAll(db); 
-    res.json(response); 
-});
+})
 
-const getAll = async(db) => {
-    const collection = db.collection('empleado');
-    const empleados = await collection.find().toArray();
-    return empleados 
-}
-
-const getOne = async(db, id) => {
-    const collection = db.collection('empleado');
-    const empleado = await collection.findOne({_id: new ObjectId(id)});
-    return empleado
-}
 export default storageEmpleado;

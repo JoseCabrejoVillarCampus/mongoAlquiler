@@ -445,6 +445,8 @@ db.cliente.insertMany([{
     }
 ]);
 use("db_campus_alquiler");
+db.cliente.find();
+use("db_campus_alquiler");
 db.createCollection("alquiler", {
     capped: true,
     size: 1900,

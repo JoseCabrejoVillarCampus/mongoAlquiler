@@ -1,58 +1,28 @@
-import session from 'express-session';
 import { Router } from 'express';
-import { SignJWT, jwtVerify } from 'jose';
-import { MongoClient, ObjectId } from 'mongodb';
-import { getDB } from '../db/db.mjs';
+import { coneccion } from "../db/atlas.js";
+import { limitGet } from '../limit/config.js';
+import {appMiddlewareRegisEntVerify} from '../middleware/registro_entregamiddleware.js';
+let storageRegisEnt = Router();
 
-const storageRegistroEntrega = Router();
-let con = undefined;
+storageRegisEnt.get('/', limitGet(),  async(req, res)=>{
+    if(!req.rateLimit) return;
+    let db = await coneccion();
+    let registro_entrega = db.collection("registro_entrega");
+    let result = await registro_entrega.find().toArray();
+    res.send(result)
+});
 
-storageRegistroEntrega.use(session({
-    secret: 'mi-secreto',
-    resave: false,
-    saveUninitialized: true,   
-}));
-
-
-storageRegistroEntrega.use("/:id?", async (req, res, next) => {
-    try {  
-        const encoder = new TextEncoder();
-        const payload = { body: req.body, params: req.params, id: req.params.id  };
-        const jwtconstructor = new SignJWT(payload);
-        const jwt = await jwtconstructor 
-            .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-            .setIssuedAt()
-            .setExpirationTime("1h")
-            .sign(encoder.encode(process.env.JWT_PRIVATE_KEY)); 
-        req.body = payload.body;
-        req.session.jwt = jwt;
-        const maxAgeInSeconds = 3600;
-        res.cookie('token', jwt, { httpOnly: true, maxAge: maxAgeInSeconds * 1000 });
-        next();  
-    } catch (err) { 
-        console.error('Error al generar el JWT:', err.message);
-        res.sendStatus(500); 
+storageRegisEnt.post('/', limitGet(), appMiddlewareRegisEntVerify, async(req, res) => {
+    let db = await coneccion();
+    let registro_entrega = db.collection("registro_entrega");
+    try {
+        let result = await registro_entrega.insertOne(req.body);
+        console.log(result);
+        res.send("registro_entrega Ingresado");
+    } catch (error) {
+        console.log(error.errInfo.details.schemaRulesNotSatisfied['0']);
+        res.send("No Fue Posible Ingresar el registro_entrega");
     }
-});
-storageRegistroEntrega.get("/:id?", async (req, res) => {
-    const db = await getDB();
-    const id = req.params.id
-    let response;
-    
-    response = (id) ? await getOne(db, id) : await getAll(db); 
-    res.json(response); 
-});
+})
 
-const getAll = async(db) => {
-    const collection = db.collection('registro_entrega');
-    const registro_entregas = await collection.find().toArray();
-    return registro_entregas 
-}
-
-const getOne = async(db, id) => {
-    const collection = db.collection('registro_entrega');
-    const registro_entrega = await collection.findOne({_id: new ObjectId(id)});
-    return registro_entrega
-}
-
-export default storageRegistroEntrega;
+export default storageRegisEnt;
