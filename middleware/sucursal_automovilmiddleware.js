@@ -9,7 +9,7 @@ const appDTODataSucuAutomovil = Router();
 
 appMiddlewareSucuAutomovilVerify.use(async(req,res,next) => {
     if(!req.rateLimit) return;
-    let {payload} = req.data;
+    let {payload} = req.data; 
     const{ iat, exp, ...newPayload } = payload;
     payload = newPayload;
     let clone = JSON.stringify(classToPlain(plainToClass(SucuAutomovil, {}, { ignoreDecorators: true })));

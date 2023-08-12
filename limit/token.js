@@ -12,15 +12,32 @@ import { RegisDevo } from '../dtocontroller/registro_devolucion.js';
 import { RegisEnt } from '../dtocontroller/registro_entrega.js';
 import {Router} from 'express';
 import { SignJWT, jwtVerify } from 'jose';
-dotenv.config('../');
 
+dotenv.config('../');
 const appToken = Router();
 const appVerify = Router();
 
+const DTO = (p1) => {
+    const match = {
+        'sucursal': Sucursal,
+        'alquiler': Alquiler,
+        'automovil': Automovil,
+        'empleado': Empleado,
+        'reserva': Reserva,
+        'cliente': Cliente,
+        'sucuautomovil': SucuAutomovil,
+        'regisdevo': RegisDevo,
+        'regisent': RegisEnt,
+        'mongo': Error
+    };
+    const inst = match[p1];
+    if(!inst) throw {status: 404, message: "Token solicitado no valido"}
+    return { atributos: plainToClass(inst, {}, {ignoreDecorators: true}), class: inst}
+};
+
 appToken.use('/:collection' ,async(req,res)=>{
-    let inst;
     try {
-        inst = plainToClass(eval(req.params.collection), {}, { ignoreDecorators: true })
+        let inst = DTO(req.params.collection).atributos;
         const encoder = new TextEncoder();
         const jwtconstructor = new SignJWT(Object.assign({},  classToPlain(inst)));
         const jwt = await jwtconstructor
@@ -52,5 +69,6 @@ appVerify.use("/", async(req,res, next)=>{
 
 export {
     appToken,
-    appVerify
+    appVerify,
+    DTO
 }

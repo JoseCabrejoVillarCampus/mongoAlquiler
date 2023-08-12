@@ -8,15 +8,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Expose } from 'class-transformer';
-import { IsDefined } from 'class-validator';
+import { IsDefined, IsString, Matches } from 'class-validator';
 export class Alquiler {
     constructor(data) {
         Object.assign(this, data);
         this.ID_Alquiler = 0;
         this.ID_Cliente_id = 0;
         this.ID_Automovil_id = 0;
-        this.Fecha_Inicio = new Date;
-        this.Fecha_Fin = new Date;
+        this.Fecha_Inicio = "1991-01-01";
+        this.Fecha_Fin = "1991-01-01";
         this.Costo_Total = 0;
         this.Estado = "";
     }
@@ -46,15 +46,19 @@ __decorate([
     Expose({ name: 'initDate' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
+    IsString({ message: 'El parametro initDate debe ser un string' }),
     IsDefined({ message: () => { throw { status: 422, message: `El parametro initDate es obligatorio` }; } }),
-    __metadata("design:type", Date)
+    Matches(/^\d{4}-\d{2}-\d{2$}/, { message: 'Error' }),
+    __metadata("design:type", String)
 ], Alquiler.prototype, "Fecha_Inicio", void 0);
 __decorate([
     Expose({ name: 'endDate' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
+    IsString({ message: 'El parametro initDate debe ser un string' }),
     IsDefined({ message: () => { throw { status: 422, message: `El parametro endDate es obligatorio` }; } }),
-    __metadata("design:type", Date)
+    Matches(/^\d{4}-\d{2}-\d{2$}/, { message: 'Error' }),
+    __metadata("design:type", String)
 ], Alquiler.prototype, "Fecha_Fin", void 0);
 __decorate([
     Expose({ name: 'totalCost' })

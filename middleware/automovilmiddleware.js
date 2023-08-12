@@ -1,10 +1,12 @@
 import 'reflect-metadata';
 import { plainToClass, classToPlain } from 'class-transformer';
 import { Automovil } from '../dtocontroller/automovil.js';
+import {Parametros} from '../dtocontroller/parametros.js';
 import { Router } from "express";
 import {validate} from 'class-validator';
 const appMiddlewareAutomovilVerify = Router();
 const appDTODataAutomovil = Router();
+const appDTOParamAutomovil = Router();
 
 
 appMiddlewareAutomovilVerify.use(async(req,res,next) => {
@@ -32,8 +34,17 @@ appDTODataAutomovil.use( async(req,res,next)=>{
         res.status(error.status).send(error)
     }
 })
-
+appDTOParamAutomovil.use("/:id", async (req, res, next)=>{
+    try{
+        let parametro = plainToClass(Parametros, req.params);
+        await validate(parametro);
+        next();
+    }catch (error){
+        res.status(error.status).send(error);
+    }
+});
 export { 
     appMiddlewareAutomovilVerify,
-    appDTODataAutomovil
+    appDTODataAutomovil,
+    appDTOParamAutomovil
 };

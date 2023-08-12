@@ -12,35 +12,55 @@ import { IsDefined } from 'class-validator';
 export class Sucursal {
     constructor(data) {
         Object.assign(this, data);
-        this.sucursal = 0;
-        this.nombre = "";
-        this.direccion = "";
-        this.telefono = "";
+        this.ID_Sucursal = 0;
+        this.Nombre = "";
+        this.Direccion = "";
+        this.Telefono = "";
+        this.BranchId = 0;
+        this.name = "";
+        this.address = "";
+        this.phoneNumber = 0;
     }
 }
 __decorate([
-    Expose({ name: 'ID_Sucursal' })
+    Expose({ name: 'branchID' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro sucursal es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro branchID es obligatorio` }; } }),
     __metadata("design:type", Number)
-], Sucursal.prototype, "sucursal", void 0);
+], Sucursal.prototype, "ID_Sucursal", void 0);
 __decorate([
-    Expose({ name: 'Nombre' })
+    Expose({ name: 'name' })
     // @IsString({ message: () => { throw { status: 422, message: `El nombre_usuario no cumple con el formato, debe ser un string`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro nombre es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro name es obligatorio` }; } }),
     __metadata("design:type", String)
-], Sucursal.prototype, "nombre", void 0);
+], Sucursal.prototype, "Nombre", void 0);
 __decorate([
-    Expose({ name: 'Direccion' }),
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro direccion es obligatorio` }; } }),
+    Expose({ name: 'address' }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro address es obligatorio` }; } }),
     __metadata("design:type", String)
-], Sucursal.prototype, "direccion", void 0);
+], Sucursal.prototype, "Direccion", void 0);
 __decorate([
-    Expose({ name: 'Telefono' })
+    Expose({ name: 'phoneNumber' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El edad_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => { throw { status: 422, message: `El parametro telefono es obligatorio` }; } }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro phoneNumber es obligatorio` }; } }),
     __metadata("design:type", String)
-], Sucursal.prototype, "telefono", void 0);
+], Sucursal.prototype, "Telefono", void 0);
+__decorate([
+    Expose({ name: 'ID_Sucursal' }),
+    __metadata("design:type", Number)
+], Sucursal.prototype, "BranchId", void 0);
+__decorate([
+    Expose({ name: 'Nombre' }),
+    __metadata("design:type", String)
+], Sucursal.prototype, "name", void 0);
+__decorate([
+    Expose({ name: 'Direccion' }),
+    __metadata("design:type", String)
+], Sucursal.prototype, "address", void 0);
+__decorate([
+    Expose({ name: 'Telefono' }),
+    __metadata("design:type", Number)
+], Sucursal.prototype, "phoneNumber", void 0);

@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 use("db_campus_alquiler");
 db.createCollection("sucursal", {
     capped: true,
@@ -6,28 +8,32 @@ db.createCollection("sucursal", {
     validator: {
     $jsonSchema: {
         bsonType: "object",
-        required: [ "direccion", "sucursal", "nombre", "telefono"],
+        additionalProperties: false,
+        required: [ "ID_Sucursal", "Nombre", "Direccion", "Telefono"],
         properties: {
-            sucursal: {
+            _id:{
+                bsonType: 'objectId',
+            },
+            ID_Sucursal: {
                 bsonType: "int",
                 minimum: 0,
                 maximum: 20,
-                description: "El campo ID_Sucursal debe ser un número y estar comprendido entre 0 y 20",
+                description: "El campo branchID debe ser un número y estar comprendido entre 0 y 20",
             },
-            nombre: {
+            Nombre: {
                 bsonType: "string",
                 pattern: "^[A-Za-z\\s]+$",
-                description: "Debe informar el campo nombre y este debe ser un string",
+                description: "Debe informar el campo name y este debe ser un string",
             },
-            direccion: {
+            Direccion: {
                 bsonType: "string",
                 pattern: "^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ,.#@\\s-]+$",
-                description: "Debe informar el campo direccion y este debe ser un string",
+                description: "Debe informar el campo address y este debe ser un string",
             },
-            telefono: {
+            Telefono: {
                 bsonType: "string",
                 pattern: "^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ,.#@\\s-]+$",
-                description: "Debe informar el campo telefono y este debe ser un string",
+                description: "Debe informar el campo phoneNumber y este debe ser un string",
             },
         },
     },
@@ -36,28 +42,28 @@ db.createCollection("sucursal", {
 use("db_campus_alquiler");
 db.sucursal.insertMany([
   {
-    sucursal: 1,
-    nombre: "Bucaramanga",
-    direccion: "calle 15# 21",
-    telefono: "3127240173",
+    ID_Sucursal: 1,
+    Nombre: "Bucaramanga",
+    Direccion: "calle 15# 21",
+    Telefono: "3127240173",
   },
   {
-    sucursal: 2,
-    nombre: "Medellin",
-    direccion: "calle 143# 31",
-    telefono: "312753453",
+    ID_Sucursal: 2,
+    Nombre: "Medellin",
+    Direccion: "calle 143# 31",
+    Telefono: "312753453",
   },
   {
-    sucursal: 3,
-    nombre: "Sincelejo",
-    direccion: "carrera 1# 14",
-    telefono: "3123456754",
+    ID_Sucursal: 3,
+    Nombre: "Sincelejo",
+    Direccion: "carrera 1# 14",
+    Telefono: "3123456754",
   },
   {
-    sucursal: 4,
-    nombre: "Barranquilla",
-    direccion: "carrera 34 #11",
-    telefono: "312900909",
+    ID_Sucursal: 4,
+    Nombre: "Barranquilla",
+    Direccion: "carrera 34 #11",
+    Telefono: "312900909",
   }
 ]);
 use("db_campus_alquiler");
@@ -68,8 +74,12 @@ db.createCollection("sucursal_automovil", {
     validator: {
     $jsonSchema: {
         bsonType: "object",
+        additionalProperties: false,
         required: ["ID_Sucursal_id", "ID_Automovil_id", "Cantidad_Disponible"],
         properties: {
+            _id:{
+                bsonType: 'objectId',
+            },
             ID_Sucursal_id: {
                 bsonType: "int",
                 minimum: 0,
@@ -131,8 +141,12 @@ db.createCollection("reserva", {
     validator: {
     $jsonSchema: {
         bsonType: "object",
+        additionalProperties: false,
         required: ["ID_Reserva", "ID_Cliente_id", "ID_Automovil_id", "Fecha_Reserva","Fecha_Inicio","Fecha_Fin","Estado"],
         properties: {
+            _id:{
+                bsonType: 'objectId',
+            },
             ID_Reserva: {
                 bsonType: "int",
                 minimum: 0,
@@ -227,8 +241,12 @@ db.createCollection("automovil", {
     validator: {
     $jsonSchema: {
         bsonType: "object",
+        additionalProperties: false,
         required: ["ID_Automovil", "Marca", "Modelo", "Anio","Tipo","Capacidad","Precio_Diario"],
         properties: {
+            _id:{
+                bsonType: 'objectId',
+            },
             ID_Automovil: {
                 bsonType: "int",
                 minimum: 0,
@@ -324,8 +342,12 @@ db.createCollection("cliente", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
+            additionalProperties: false,
             required: ["ID_Cliente", "Nombre", "Apellido", "DNI", "Direccion", "Telefono", "Email"],
             properties: {
+                _id:{
+                    bsonType: 'objectId',
+                },
                 ID_Cliente: {
                     bsonType: "int",
                     minimum: 0,
@@ -439,8 +461,6 @@ db.cliente.insertMany([{
     }
 ]);
 use("db_campus_alquiler");
-db.cliente.find();
-use("db_campus_alquiler");
 db.createCollection("alquiler", {
     capped: true,
     size: 1900,
@@ -448,8 +468,12 @@ db.createCollection("alquiler", {
     validator: {
     $jsonSchema: {
         bsonType: "object",
+        additionalProperties: false,
         required: ["ID_Alquiler", "ID_Cliente_id", "ID_Automovil_id", "Fecha_Inicio","Fecha_Fin","Costo_Total","Estado"],
         properties: {
+            _id:{
+                bsonType: 'objectId',
+            },
             ID_Alquiler: {
                 bsonType: "int",
                 minimum: 0,
@@ -544,8 +568,12 @@ db.createCollection("registro_devolucion", {
     validator: {
     $jsonSchema: {
         bsonType: "object",
+        additionalProperties: false,
         required: ["ID_Registro", "ID_Alquiler_id", "ID_Empleado_id", "Fecha_Devolucion","Combustible_Devuelto","Kilometraje_Devuelto","Monto_Adicional"],
         properties: {
+            _id:{
+                bsonType: 'objectId',
+            },
             ID_Registro: {
                 bsonType: "int",
                 minimum: 0,
@@ -630,8 +658,12 @@ db.createCollection("registro_entrega", {
     validator: {
     $jsonSchema: {
         bsonType: "object",
+        additionalProperties: false,
         required: ["ID_Registro", "ID_Alquiler_id", "ID_Empleado_id", "Fecha_Entrega","Combustible_Entregado","Kilometraje_Entregado"],
         properties: {
+            _id:{
+                bsonType: 'objectId',
+            },
             ID_Registro: {
                 bsonType: "int",
                 minimum: 0,
@@ -708,8 +740,12 @@ db.createCollection("empleado", {
     validator: {
     $jsonSchema: {
         bsonType: "object",
+        additionalProperties: false,
         required: ["ID_Empleado", "Nombre", "Apellido", "DNI", "Direccion", "Telefono", "Cargo"],
         properties: {
+            _id:{
+                bsonType: 'objectId',
+            },
             ID_Empleado: {
                 bsonType: "int",
                 minimum: 0,

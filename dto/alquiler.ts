@@ -1,5 +1,5 @@
 import { Expose, Transform } from 'class-transformer';
-import { IsDefined } from 'class-validator';
+import { IsDefined, IsString, Matches } from 'class-validator';
 export class Alquiler {
 
     @Expose({ name: 'rent' })
@@ -19,13 +19,17 @@ export class Alquiler {
 
     @Expose({ name: 'initDate' }) 
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
+    @IsString ({ message: 'El parametro initDate debe ser un string'})
     @IsDefined({ message: () => { throw { status: 422, message: `El parametro initDate es obligatorio` } } })
-    Fecha_Inicio: Date;
+    @Matches(/^\d{4}-\d{2}-\d{2$}/,{message: 'Error'})
+    Fecha_Inicio: string;
 
     @Expose({ name: 'endDate' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
+    @IsString ({ message: 'El parametro initDate debe ser un string'})
     @IsDefined({ message: () => { throw { status: 422, message: `El parametro endDate es obligatorio` } } })
-    Fecha_Fin: Date;
+    @Matches(/^\d{4}-\d{2}-\d{2$}/,{message: 'Error'})
+    Fecha_Fin: string;
 
     @Expose({ name: 'totalCost' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
@@ -42,8 +46,8 @@ export class Alquiler {
         this.ID_Alquiler = 0;
         this.ID_Cliente_id = 0;
         this.ID_Automovil_id = 0;
-        this.Fecha_Inicio = new Date ;
-        this.Fecha_Fin = new Date;
+        this.Fecha_Inicio = "1991-01-01" ;
+        this.Fecha_Fin = "1991-01-01";
         this.Costo_Total = 0;
         this.Estado = "";
         
