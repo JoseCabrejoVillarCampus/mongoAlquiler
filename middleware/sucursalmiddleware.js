@@ -4,6 +4,7 @@ import { Parametros } from '../dtocontroller/parametros.js';
 import { DTO } from '../limit/token.js';
 import { Router } from "express";
 import { validate } from 'class-validator';
+
 const appMiddlewareSucursalVerify = Router();
 const appDTODataSucursal = Router();
 const appDTOParamSucursal= Router();

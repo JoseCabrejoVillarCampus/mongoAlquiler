@@ -8,16 +8,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Expose } from 'class-transformer';
-import { IsDefined } from 'class-validator';
+import { IsDefined, IsString, Matches } from 'class-validator';
 export class Reserva {
     constructor(data) {
         Object.assign(this, data);
         this.ID_Reserva = 0;
         this.ID_Cliente_id = 0;
         this.ID_Automovil_id = 0;
-        this.Fecha_Reserva = new Date;
-        this.Fecha_Inicio = new Date;
-        this.Fecha_Fin = new Date;
+        this.Fecha_Reserva = "1991-01-01";
+        this.Fecha_Inicio = "1991-01-01";
+        this.Fecha_Fin = "1991-01-01";
         this.Estado = "";
     }
 }
@@ -46,25 +46,28 @@ __decorate([
     Expose({ name: 'reservation_date' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsDefined({ message: () => {
-            throw { status: 422, message: `El parametro reservation_date
-    es obligatorio` };
-        } }),
-    __metadata("design:type", Date)
+    IsString({ message: 'El parametro reservation_date debe ser un string' }),
+    IsDefined({ message: () => { throw { status: 422, message: `El parametro reservation_date es obligatorio` }; } }),
+    Matches(/^\d{4}-\d{2}-\d{2$}/, { message: 'Error' }),
+    __metadata("design:type", String)
 ], Reserva.prototype, "Fecha_Reserva", void 0);
 __decorate([
     Expose({ name: 'start_date' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
+    IsString({ message: 'El parametro start_date debe ser un string' }),
     IsDefined({ message: () => { throw { status: 422, message: `El parametro start_date es obligatorio` }; } }),
-    __metadata("design:type", Date)
+    Matches(/^\d{4}-\d{2}-\d{2$}/, { message: 'Error' }),
+    __metadata("design:type", String)
 ], Reserva.prototype, "Fecha_Inicio", void 0);
 __decorate([
     Expose({ name: 'end_date' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
+    IsString({ message: 'El parametro end_date debe ser un string' }),
     IsDefined({ message: () => { throw { status: 422, message: `El parametro end_date es obligatorio` }; } }),
-    __metadata("design:type", Date)
+    Matches(/^\d{4}-\d{2}-\d{2$}/, { message: 'Error' }),
+    __metadata("design:type", String)
 ], Reserva.prototype, "Fecha_Fin", void 0);
 __decorate([
     Expose({ name: 'estate' })

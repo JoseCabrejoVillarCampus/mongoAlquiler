@@ -8,14 +8,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Expose } from 'class-transformer';
-import { IsDefined } from 'class-validator';
+import { IsDefined, Matches, IsString } from 'class-validator';
 export class RegisDevo {
     constructor(data) {
         Object.assign(this, data);
         this.ID_Registro = 0;
         this.ID_Alquiler_id = 0;
         this.ID_Empleado_id = 0;
-        this.Fecha_Devolucion = new Date;
+        this.Fecha_Devolucion = "1991-01-01";
         this.Combustible_Devuelto = 0;
         this.Kilometraje_Devuelto = 0;
         this.Monto_Adicional = 0;
@@ -46,8 +46,10 @@ __decorate([
     Expose({ name: 'return_date' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
+    IsString({ message: 'El parametro return_date debe ser un string' }),
     IsDefined({ message: () => { throw { status: 422, message: `El parametro return_date es obligatorio` }; } }),
-    __metadata("design:type", Date)
+    Matches(/^\d{4}-\d{2}-\d{2$}/, { message: 'Error' }),
+    __metadata("design:type", String)
 ], RegisDevo.prototype, "Fecha_Devolucion", void 0);
 __decorate([
     Expose({ name: 'fuel_returned' })

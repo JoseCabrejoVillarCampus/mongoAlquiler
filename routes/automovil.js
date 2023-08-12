@@ -1,13 +1,17 @@
 import { Router } from 'express';
 import { coneccion } from "../db/atlas.js";
 import { limitGet } from '../limit/config.js';
+import { plainToClass } from 'class-transformer';
+import { DTO } from '../limit/token.js';
 import {appMiddlewareAutomovilVerify, appDTODataAutomovil, appDTOParamAutomovil} from '../middleware/automovilmiddleware.js';
+import { Automovil } from '../dtocontroller/automovil.js';
 let storageAutomovil = Router();
 
 let db = await coneccion();
 let automovil = db.collection("automovil");
 
-storageAutomovil.get('/', limitGet(), appMiddlewareAutomovilVerify, async(req, res)=>{
+storageAutomovil.get('/:id?', limitGet(), appMiddlewareAutomovilVerify, async(req, res)=>{
+    
     if(!req.rateLimit) return;
     let result = (!req.params.id)
     ? await automovil.find({}).toArray()
@@ -21,9 +25,12 @@ storageAutomovil.post('/', limitGet(), appMiddlewareAutomovilVerify, appDTODataA
         let result = await automovil.insertOne(req.body);
         console.log(result);
         res.send("automovil Ingresado");
-    } catch (error) {
-        console.log(error.errInfo.details.schemaRulesNotSatisfied['0']);
-        res.send("No Fue Posible Ingresar el automovil");
+    } catch (error){
+        const err = plainToClass(DTO("mongo").class, error.errInfo.details.schemaRulesNotSatisfied)
+
+        const errorList = processErrors(err, Sucursal);
+
+        res.send(err);
     }
 });
 storageAutomovil.put("/:id?", limitGet(), appMiddlewareAutomovilVerify, appDTODataAutomovil , appDTOParamAutomovil, async(req, res)=>{

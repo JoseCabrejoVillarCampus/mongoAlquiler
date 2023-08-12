@@ -1,9 +1,10 @@
 import 'reflect-metadata';
 import { plainToClass, classToPlain } from 'class-transformer';
-import { Automovil } from '../dtocontroller/automovil.js';
 import {Parametros} from '../dtocontroller/parametros.js';
+import { DTO } from '../limit/token.js';
 import { Router } from "express";
 import {validate} from 'class-validator';
+
 const appMiddlewareAutomovilVerify = Router();
 const appDTODataAutomovil = Router();
 const appDTOParamAutomovil = Router();
@@ -14,10 +15,8 @@ appMiddlewareAutomovilVerify.use(async(req,res,next) => {
     let {payload} = req.data;
     const{ iat, exp, ...newPayload } = payload;
     payload = newPayload;
-    let clone = JSON.stringify(classToPlain(plainToClass(Automovil, {}, { ignoreDecorators: true })));
+    let clone = JSON.stringify(classToPlain(plainToClass(DTO("automovil").class, {}, { ignoreDecorators: true })));
     let verify = clone === JSON.stringify(payload);
-    console.log(payload);
-    console.log(clone);
     req.data= undefined;
     if(!verify) res.status(406).send({status: 406, message: "No Autorizado"})
     next();
@@ -25,7 +24,7 @@ appMiddlewareAutomovilVerify.use(async(req,res,next) => {
 );
 appDTODataAutomovil.use( async(req,res,next)=>{
     try {
-        let data = plainToClass(Automovil, req.body);
+        let data = plainToClass(DTO("automovil").class, req.body);
         await validate(data);
         req.body = JSON.parse(JSON.stringify(data));
         req.data= undefined;

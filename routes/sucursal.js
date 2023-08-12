@@ -12,7 +12,7 @@ let db = await coneccion();
 let sucursal = db.collection("sucursal");
 
 storageSucursal.get('/:id?', limitGet(), appMiddlewareSucursalVerify ,  async(req, res)=>{
-    
+
     if(!req.rateLimit) return;
     let result = (!req.params.id)     
     ? await sucursal.find({}).toArray()
@@ -34,7 +34,6 @@ storageSucursal.post("/", limitGet(), appMiddlewareSucursalVerify, appDTODataSuc
         res.send(err);
     }
 });
-
 storageSucursal.put("/:id?", limitGet(), appMiddlewareSucursalVerify, appDTODataSucursal , appDTOParamSucursal, async(req, res)=>{
     if(!req.rateLimit) return;
     if(!req.params.id){

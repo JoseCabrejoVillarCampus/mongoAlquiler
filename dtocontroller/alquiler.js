@@ -55,7 +55,7 @@ __decorate([
     Expose({ name: 'endDate' })
     // @IsNumber({}, { message: () => { throw { status: 422, message: `El cedula_usuario no cumple con el formato, debe ser un numero`}}})
     ,
-    IsString({ message: 'El parametro initDate debe ser un string' }),
+    IsString({ message: 'El parametro endDate debe ser un string' }),
     IsDefined({ message: () => { throw { status: 422, message: `El parametro endDate es obligatorio` }; } }),
     Matches(/^\d{4}-\d{2}-\d{2$}/, { message: 'Error' }),
     __metadata("design:type", String)
