@@ -3,6 +3,7 @@ import { coneccion } from "../db/atlas.js";
 import { limitGet } from '../limit/config.js';
 import { plainToClass } from 'class-transformer';
 import { DTO } from '../limit/token.js';
+import expressQueryBoolean from 'express-query-boolean';
 import {appMiddlewareAutomovilVerify, appDTODataAutomovil, appDTOParamAutomovil} from '../middleware/automovilmiddleware.js';
 import { Automovil } from '../dtocontroller/automovil.js';
 let storageAutomovil = Router();
@@ -10,13 +11,52 @@ let storageAutomovil = Router();
 let db = await coneccion();
 let automovil = db.collection("automovil");
 
-storageAutomovil.get('/:id?', limitGet(), appMiddlewareAutomovilVerify, async(req, res)=>{
-    
-    if(!req.rateLimit) return;
-    let result = (!req.params.id)
-    ? await automovil.find({}).toArray()
-    : await automovil.find({ "ID_Automovil": parseInt(req.params.id)}).toArray();
-    res.send(result)
+storageAutomovil.use(expressQueryBoolean());
+
+const getAutomovilById = (id)=>{
+    return new Promise(async(resolve)=>{
+        let result = await automovil.aggregate([{
+            $match: {
+                ID_Automovil: parseInt(id)
+            }
+        }]).toArray();
+    resolve(result);
+    })
+};
+const getAutomovilByCap = (capacidad)=>{
+    return new Promise(async(resolve)=>{
+        let result = await automovil.find({
+            Capacidad: {
+                $gt: parseInt(capacidad)
+            }
+        }).toArray();
+    resolve(result);
+    })
+};
+const getAutomovilAll = ()=>{
+    return new Promise(async(resolve)=>{
+        let result = await automovil.find({}).toArray();
+        resolve(result);
+    })
+};
+
+storageAutomovil.get("/", limitGet() ,appMiddlewareAutomovilVerify ,async(req, res)=>{
+    try{
+        const {id, capacidad } = req.query;
+        if(id){
+            const data = await getAutomovilById(id);
+            res.send(data)
+        }else if(capacidad) {
+            const data = await getAutomovilByCap(capacidad);
+            res.send(data);
+        }else {
+            const data = await getAutomovilAll();
+            res.send(data);
+        }
+    }catch(err){
+        console.error("Ocurrió un error al procesar la solicitud", err.message);
+        res.sendStatus(500);
+    }
 });
 
 storageAutomovil.post('/', limitGet(), appMiddlewareAutomovilVerify, appDTODataAutomovil, async(req, res) => {

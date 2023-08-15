@@ -3,6 +3,7 @@ import { coneccion } from "../db/atlas.js";
 import { limitGet } from '../limit/config.js';
 import { plainToClass } from 'class-transformer';
 import { DTO } from '../limit/token.js';
+import expressQueryBoolean from 'express-query-boolean';
 import {appMiddlewareSucuAutomovilVerify, appDTODataSucuAutomovil, appDTOParamSucuAutomovil} from '../middleware/sucursal_automovilmiddleware.js';
 import { SucuAutomovil } from '../dtocontroller/sucursal_automovil.js';
 import { Automovil } from '../dtocontroller/automovil.js';
@@ -11,13 +12,78 @@ let storageSucuAutomovil = Router();
 let db = await coneccion();
 let sucursal_automovil = db.collection("sucursal_automovil");
 
-storageSucuAutomovil.get('/:id?', limitGet(), appMiddlewareSucuAutomovilVerify ,  async(req, res)=>{
+storageSucuAutomovil.use(expressQueryBoolean());
 
-    if(!req.rateLimit) return;
-    let result = (!req.params.id)     
-    ? await sucursal_automovil.find({}).toArray()
-    : await sucursal_automovil.find({ "ID_Sucursal_id": parseInt(req.params.id)}).toArray();
-    res.send(result); 
+const getSucuAutomovilById = (id)=>{
+    return new Promise(async(resolve)=>{
+        let result = await sucursal_automovil.find({ "ID_Sucursal_id": parseInt(id)}).toArray();
+        resolve(result);
+    })
+};
+
+const getSucuAutoDisponible = ()=>{
+    return new Promise(async(resolve)=>{
+        let result = await sucursal_automovil.aggregate([{
+            $lookup: {
+                from: "sucursal",
+                localField: "ID_Sucursal_id",
+                foreignField: "ID_Sucursal",
+                as: "sucursal_FK"
+            }
+        },
+        {
+            $unwind: "$sucursal_FK"
+        },
+        {
+            $project: {
+                "ID_Automovil_id": 0,
+                "sucursal_FK._id": 0,
+                "sucursal_FK.ID_Sucursal": 0,
+                "sucursal_FK.Telefono": 0,
+                "sucursal_FK.Direccion": 0
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                Cantidad_Disponible: {
+                    $first: "$Cantidad_Disponible"
+                },
+                sucursal_FK: {
+                    $push: "$sucursal_FK"
+                }
+            }
+        }
+    ]).toArray();
+        resolve(result);
+    })
+};
+
+const getSucuAutomovilAll = ()=>{
+    return new Promise(async(resolve)=>{
+        let result = await sucursal_automovil.find({}).toArray();
+        resolve(result);
+    })
+};
+
+storageSucuAutomovil.get("/", limitGet() ,appMiddlewareSucuAutomovilVerify ,async(req, res)=>{
+    try{
+        const {id} = req.query;
+        if(id){
+            const data = await getSucuAutomovilById(id);
+            res.send(data)
+        } else {
+            const data = await getSucuAutomovilAll();
+            res.send(data);
+        }
+    }catch(err){
+        console.error("Ocurrió un error al procesar la solicitud", err.message);
+        res.sendStatus(500);
+    }
+});
+storageSucuAutomovil.get("/disponibilidad", limitGet() ,appMiddlewareSucuAutomovilVerify ,async(req, res)=>{
+            const data = await getSucuAutoDisponible();
+            res.send(data);
 });
 
 storageSucuAutomovil.post("/", limitGet(), appMiddlewareSucuAutomovilVerify, appDTODataSucuAutomovil, async(req, res)=>{

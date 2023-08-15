@@ -3,6 +3,7 @@ import { coneccion } from "../db/atlas.js";
 import { limitGet } from '../limit/config.js';
 import { plainToClass } from 'class-transformer';
 import { DTO } from '../limit/token.js';
+import expressQueryBoolean from 'express-query-boolean';
 import {appMiddlewareAlquilerVerify, appDTODataAlquiler, appDTOParamAlquiler} from '../middleware/alquilermiddleware.js';
 import { processErrors } from '../common/Functions.js';
 import { Alquiler } from '../dtocontroller/alquiler.js';
@@ -11,13 +12,74 @@ let storageAlquiler = Router();
 let db = await coneccion();
 let alquiler = db.collection("alquiler");
 
-storageAlquiler.get('/:id?', limitGet(), appMiddlewareAlquilerVerify ,async(req, res)=>{
+storageAlquiler.use(expressQueryBoolean());
 
-    if(!req.rateLimit) return;
-    let result = (!req.params.id)
-    ? await alquiler.find({}).toArray()
-    : await alquiler.find({ "ID_Alquiler": parseInt(req.params.id)}).toArray();
-    res.send(result)
+const getAlquilerById = (id)=>{
+    return new Promise(async(resolve)=>{
+        let result = await alquiler.aggregate([{
+            $match: {
+                ID_Alquiler: parseInt(id)
+            }
+        }]).toArray();
+    resolve(result);
+    })
+};
+const getCostoTotalById = (costo)=>{
+    return new Promise(async(resolve)=>{
+        let result = await alquiler.aggregate([
+            {
+                $project: {
+                    _id: 0,
+                    ID_Automovil_id: 0,
+                    Fecha_Inicio:0,
+                    Fecha_Fin: 0,
+                    Estado: 0
+                }
+            },
+            {
+                $match: {
+                    "ID_Alquiler": {$eq: parseInt(costo)}
+                }
+            }
+        ]).toArray();
+    resolve(result);
+    })
+};
+const getAlquilerEstado = (estado)=>{
+    return new Promise(async(resolve)=>{
+        let result = await alquiler.find({
+            Estado: estado
+        }).toArray();
+        resolve(result);
+    })
+};
+const getAlquilerAll = ()=>{
+    return new Promise(async(resolve)=>{
+        let result = await alquiler.find({}).toArray();
+        resolve(result);
+    })
+};
+
+storageAlquiler.get("/", limitGet() ,appMiddlewareAlquilerVerify ,async(req, res)=>{
+    try{
+        const {id , estado, costo } = req.query;
+        if(id){
+            const data = await getAlquilerById(id);
+            res.send(data)
+        }else if (estado) {
+            const data = await getAlquilerEstado(estado);
+            res.send(data);
+        }else if (costo) {
+            const data = await getCostoTotalById(costo);
+            res.send(data);
+        }else {
+            const data = await getAlquilerAll();
+            res.send(data);
+        }
+    }catch(err){
+        console.error("Ocurrió un error al procesar la solicitud", err.message);
+        res.sendStatus(500);
+    }
 });
 
 storageAlquiler.post('/', limitGet(), appMiddlewareAlquilerVerify, appDTODataAlquiler , async(req, res) => {

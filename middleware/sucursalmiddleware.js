@@ -28,7 +28,7 @@ appDTODataSucursal.use( async(req,res,next)=>{
         req.data= undefined;
         next();
     } catch (error) {
-        res.status(error.status).send(error)
+        res.status(error.status).send(error)    
     }
 });
 appDTOParamSucursal.use("/:id", async (req, res, next)=>{

@@ -29,7 +29,7 @@ app.use("/token", appToken);
 
 
 let config = JSON.parse(process.env.MY_SERVER);
-console.log(config);
+
 app.listen(config, ()=>{
     console.log(`http://${config.hostname}:${config.port}`);
 });

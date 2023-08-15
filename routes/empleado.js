@@ -3,6 +3,7 @@ import { coneccion } from "../db/atlas.js";
 import { limitGet } from '../limit/config.js';
 import { plainToClass } from 'class-transformer';
 import { DTO } from '../limit/token.js';
+import expressQueryBoolean from 'express-query-boolean';
 import {appMiddlewareEmpleadoVerify, appDTODataEmpleado, appDTOParamEmpleado} from '../middleware/empleadomiddleware.js';
 import { Empleado } from '../dtocontroller/empleado.js';
 let storageEmpleado = Router();
@@ -10,13 +11,46 @@ let storageEmpleado = Router();
 let db = await coneccion();
 let empleado = db.collection("empleado");
 
-storageEmpleado.get('/:id?', limitGet(), appMiddlewareEmpleadoVerify ,  async(req, res)=>{
+storageEmpleado.use(expressQueryBoolean());
 
-    if(!req.rateLimit) return;
-    let result = (!req.params.id)     
-    ? await empleado.find({}).toArray()
-    : await empleado.find({ "ID_Empleado": parseInt(req.params.id)}).toArray();
-    res.send(result);
+const getEmpleadoById = (id)=>{
+    return new Promise(async(resolve)=>{
+        let result = await empleado.find({ "ID_Empleado": parseInt(id)}).toArray();
+        resolve(result);
+    })
+};
+const getEmpleadoByCargo = (cargo)=>{
+    return new Promise(async(resolve)=>{
+        let result = await empleado.find({
+            Cargo: cargo
+        }).toArray();
+        resolve(result);
+    })
+};
+const getEmpleadoAll = ()=>{
+    return new Promise(async(resolve)=>{
+        let result = await empleado.find({}).toArray();
+        resolve(result);
+    })
+};
+
+storageEmpleado.get("/", limitGet() ,appMiddlewareEmpleadoVerify ,async(req, res)=>{
+    try{
+        const {id, cargo} = req.query;
+        if(id){
+            const data = await getEmpleadoById(id);
+            res.send(data)
+        }else if (cargo){
+            const data = await getEmpleadoByCargo(cargo);
+            res.send(data);
+        } else {
+            const data = await getEmpleadoAll();
+            res.send(data);
+        }
+    }catch(err){
+        console.error("Ocurrió un error al procesar la solicitud", err.message);
+        res.sendStatus(500);
+    }
 });
 
 storageEmpleado.post("/", limitGet(), appMiddlewareEmpleadoVerify , appDTODataEmpleado, async(req, res)=>{
