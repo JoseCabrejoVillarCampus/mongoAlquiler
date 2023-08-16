@@ -175,11 +175,11 @@ Estos funciona  para POST/ GET/ DELETE/ PUT/,dentro del cliente que deseemos usa
 
 ## Metodo GET para todas las colecciones
 
-El metodo **GET** para todas las tablas es el mismo del endpoint,pero si deseamos buscar por ID, si cambia algo la ruta, ya que nos es necesario adicionar un "/" seguido del id que desamos buscar
+El metodo **GET** para todas las tablas es el mismo del endpoint,pero si deseamos buscar por ID, si cambia algo la ruta, ya que nos es necesario adicionar un "?id=" seguido del id que desamos buscar
 
 Ejemplo:
 
-*http://${config.hostname}:${config.port}/sucursal/2*
+*http://${config.hostname}:${config.port}/sucursal?id=2*
 
 en este caso estamos buscando dentro de la coleccion alquiler, el id especifico 2, que corresponde a nuestro "ID_Sucursal", creado en los esquemeas
 
@@ -218,6 +218,192 @@ EJEMPLO:
 
 <img src="./img/Screenshot from 2023-08-12 10-11-47.png">
 ---
+
+## ENDPOINTS PARA CONSULTAS ESPECIFICAS
+
+Esto despues de haber generado el token de la coleccion donde se realiza la consulta
+
+* 1 Recursos: Sql, DTO, JWT.
+
+* 2 Mostrar todos los clientes registrados en la base de datos.
+
+*http://${config.hostname}:${config.port}/cliente*
+
+Ejemplo:
+
+```
+http://127.12.31.02:5022/cliente
+```
+
+* 3 Obtener todos los automóviles disponibles para alquiler.
+
+*http://${config.hostname}:${config.port}/alquiler?estado={""}*
+
+Ejemplo:
+
+```
+http://127.12.31.02:5022/alquiler?estado=Disponible
+```
+
+Para este caso, hicimos un buscador por estado, donde podemos buscar otros ademas de Disponible
+
+* 4 Listar todos los alquileres activos junto con los datos de los clientes relacionados.
+
+*http://${config.hostname}:${config.port}/cliente?estado={""}*
+
+Ejemplo:
+
+```
+http://127.12.31.02:5022/cliente?estado=Activo
+```
+
+* 5 Mostrar todas las reservas pendientes con los datos del cliente y el automóvil reservado.
+
+
+```
+http://127.12.31.02:5022/cliente/reservaspendientes
+```
+
+* 6 Obtener los detalles del alquiler con el ID_Alquiler específico.
+
+*http://${config.hostname}:${config.port}/alquiler?id={}*
+
+Ejemplo:
+
+```
+http://127.12.31.02:5022/alquiler?id=2
+```
+
+Donde id es el numero de id a consultar, en este caso usamos 2 para el ejemplo
+
+* 7 Listar los empleados con el cargo de "Vendedor".
+
+*http://${config.hostname}:${config.port}/empleado?cargo={""}*
+
+Ejemplo:
+
+```
+http://127.12.31.02:5022/empleado?cargo=Vendedor
+```
+
+* 8 Mostrar la cantidad total de automóviles disponibles en cada sucursal.
+
+
+```
+http://127.12.31.02:5022/sucursal_automovil/disponibilidad
+```
+
+* 9 Obtener el costo total de un alquiler específico.
+
+*http://${config.hostname}:${config.port}/alquiler?costo={}*
+
+Ejemplo:
+
+```
+http://127.12.31.02:5022/alquiler?costo=2
+```
+
+En este caso el numero que pasamos por parametro hace referencia al id del alquiler a calcular el costo total
+
+* 10 Listar los clientes con el DNI específico.
+
+*http://${config.hostname}:${config.port}/cliente?documento={""}*
+
+Ejemplo:
+
+```
+http://127.12.31.02:5022/cliente?documento=Cedula
+```
+
+Aca buscamos al cliente por tipo de documento, de ejemplo hemos usado Cedula.
+
+* 11 Mostrar todos los automóviles con una capacidad mayor a 5 personas.
+
+*http://${config.hostname}:${config.port}/automovil?capacidad={}*
+
+Ejemplo:
+
+```
+http://127.12.31.02:5022/automovil?capacidad=5
+```
+
+* 12 Obtener los detalles del alquiler que tiene fecha de inicio en '2023-07-05'.
+
+*http://${config.hostname}:${config.port}/alquiler?date={""}*
+
+Ejemplo:
+
+```
+http://127.12.31.02:5022/alquiler?date=2023-07-05
+```
+
+**NOTA**: aun esta fallando, quiero que la fecha sea un parametro y no un valor fijo( ya merito).
+
+* 13 Listar las reservas pendientes realizadas por un cliente específico.
+
+*http://${config.hostname}:${config.port}/reserva?cliente={""}*
+
+Ejemplo:
+
+```
+http://127.12.31.02:5022/reserva?cliente=2
+```
+
+Aca el cliente, es el id de este mismo y buscamos las reservas que tiene.
+
+* 14 Mostrar los empleados con cargo de "Gerente" o "Asistente".
+
+```
+http://127.12.31.02:5022/empleado/cargos
+```
+
+* 15 Obtener los datos de los clientes que realizaron al menos un alquiler.
+
+```
+http://127.12.31.02:5022/registro_devolucion/almostonerent
+```
+
+* 16 Listar todos los automóviles ordenados por marca y modelo.
+
+* 17 Mostrar la cantidad total de automóviles en cada sucursal junto con su dirección.
+
+```
+http://127.12.31.02:5022/sucursal_automovil/direccion
+``` 
+
+* 18 Obtener la cantidad total de alquileres registrados en la base de datos.
+
+```
+http://127.12.31.02:5022/alquiler/total
+``` 
+
+* 19 Mostrar los automóviles con capacidad igual a 5 personas y que estén disponibles.
+
+*http://${config.hostname}:${config.port}/automovil?capdisponible={}*
+
+Ejemplo:
+
+```
+http://127.12.31.02:5022/automovil?capdisponible=5
+``` 
+
+En este caso dejamos constante la disponibilidad y filtramos por capacidad  igual a 5, este puede variar a los puestos que deseemos consultar.
+
+* 20 Obtener los datos del cliente que realizó la reserva con reserva_id especifico.
+
+*http://${config.hostname}:${config.port}/reserva?reservacliente={}*
+
+Ejemplo:
+
+```
+http://127.12.31.02:5022/reserva?reservacliente=2
+``` 
+
+* 21 Listar los alquileres con fecha de inicio entre '2023-08-11' y '2023-09-11'.
+
+```
+http://127.12.31.02:5022/alquiler/datesbetween
+``` 
 
 # ALGUNOS OPERADORES USADOS
 
