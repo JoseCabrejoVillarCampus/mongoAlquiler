@@ -65,6 +65,42 @@ const getSucuAutomovilAll = ()=>{
         resolve(result);
     })
 };
+const getSucuAutomovilAddress = ()=>{
+    return new Promise(async(resolve)=>{
+        let result = await sucursal_automovil.aggregate([{
+            $lookup: {
+                from: "sucursal",
+                localField: "ID_Sucursal_id",
+                foreignField: "ID_Sucursal",
+                as: "sucursal_FK"
+            },
+        },
+        {
+            $unwind: "$sucursal_FK"
+        },
+        {
+            $project: {
+                "ID_Automovil_id": 0,
+                "sucursal_FK._id": 0,
+                "sucursal_FK.ID_Sucursal": 0,
+                "sucursal_FK.Telefono": 0,
+            }
+        },
+        {
+            $group: {
+                _id: "$sucursal_FK.Nombre",
+                Cantidad_Disponible: {
+                    $sum: "$Cantidad_Disponible"
+                },
+                sucursal_FK: {
+                    $first: "$sucursal_FK"
+                }
+            }
+        }
+    ]).toArray();
+        resolve(result);
+    })
+};
 
 storageSucuAutomovil.get("/", limitGet() ,appMiddlewareSucuAutomovilVerify ,async(req, res)=>{
     try{
@@ -82,8 +118,22 @@ storageSucuAutomovil.get("/", limitGet() ,appMiddlewareSucuAutomovilVerify ,asyn
     }
 });
 storageSucuAutomovil.get("/disponibilidad", limitGet() ,appMiddlewareSucuAutomovilVerify ,async(req, res)=>{
-            const data = await getSucuAutoDisponible();
+    try {
+        const data = await getSucuAutoDisponible();
             res.send(data);
+    } catch (err) {
+        console.error("Ocurrió un error al procesar la solicitud", err.message);
+        res.sendStatus(500);
+    }
+});
+storageSucuAutomovil.get("/direccion", limitGet() ,appMiddlewareSucuAutomovilVerify ,async(req, res)=>{
+    try {
+        const data = await getSucuAutomovilAddress();
+            res.send(data);
+    } catch (err) {
+        console.error("Ocurrió un error al procesar la solicitud", err.message);
+        res.sendStatus(500);
+    }
 });
 
 storageSucuAutomovil.post("/", limitGet(), appMiddlewareSucuAutomovilVerify, appDTODataSucuAutomovil, async(req, res)=>{
@@ -95,7 +145,7 @@ storageSucuAutomovil.post("/", limitGet(), appMiddlewareSucuAutomovilVerify, app
     } catch (error){
         const err = plainToClass(DTO("mongo").class, error.errInfo.details.schemaRulesNotSatisfied)
 
-        const errorList = processErrors(err, Automovil);
+        const errorList = processErrors(err, SucuAutomovil);
 
         res.send(err);
     }

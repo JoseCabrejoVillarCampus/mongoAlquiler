@@ -27,6 +27,18 @@ const getEmpleadoByCargo = (cargo)=>{
         resolve(result);
     })
 };
+const getEmpleadoByCargos = ()=>{
+    return new Promise(async(resolve)=>{
+        let result = await empleado.find({
+            $or: [{
+                Cargo: "Gerente"
+            }, {
+                Cargo: "Vendedor"
+            }]
+        }).toArray();
+        resolve(result);
+    })
+};
 const getEmpleadoAll = ()=>{
     return new Promise(async(resolve)=>{
         let result = await empleado.find({}).toArray();
@@ -51,6 +63,15 @@ storageEmpleado.get("/", limitGet() ,appMiddlewareEmpleadoVerify ,async(req, res
         console.error("Ocurrió un error al procesar la solicitud", err.message);
         res.sendStatus(500);
     }
+});
+storageEmpleado.get("/cargos", limitGet() ,appMiddlewareEmpleadoVerify ,async(req, res)=>{
+    try {
+        const data = await getEmpleadoByCargos();
+    res.send(data)
+    } catch (err) {
+        console.error("Ocurrió un error al procesar la solicitud", err.message);
+        res.sendStatus(500);
+    }    
 });
 
 storageEmpleado.post("/", limitGet(), appMiddlewareEmpleadoVerify , appDTODataEmpleado, async(req, res)=>{

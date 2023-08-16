@@ -3,6 +3,7 @@ import { coneccion } from "../db/atlas.js";
 import { limitGet } from '../limit/config.js';
 import { plainToClass } from 'class-transformer';
 import { DTO } from '../limit/token.js';
+import expressQueryBoolean from 'express-query-boolean';
 import {appMiddlewareSucursalVerify, appDTODataSucursal, appDTOParamSucursal} from '../middleware/sucursalmiddleware.js';
 import { processErrors } from '../common/Functions.js';
 import { Sucursal } from '../dtocontroller/sucursal.js';
@@ -11,14 +12,38 @@ let storageSucursal = Router();
 let db = await coneccion();
 let sucursal = db.collection("sucursal");
 
-storageSucursal.get('/:id?', limitGet(), appMiddlewareSucursalVerify ,  async(req, res)=>{
+storageSucursal.use(expressQueryBoolean());
 
-    if(!req.rateLimit) return;
-    let result = (!req.params.id)     
-    ? await sucursal.find({}).toArray()
-    : await sucursal.find({ "ID_Sucursal": parseInt(req.params.id)}).toArray();
-    res.send(result);
+const getSucursalById = (id)=>{
+    return new Promise(async(resolve)=>{
+        let result = await sucursal.find({ID_Sucursal: parseInt(id)}).toArray();
+    resolve(result);
+    })
+};
+const getSucursalAll = ()=>{
+    return new Promise(async(resolve)=>{
+        let result = await sucursal.find({}).toArray();
+        resolve(result);
+    })
+};
+
+storageSucursal.get("/", limitGet() ,appMiddlewareSucursalVerify ,async(req, res)=>{
+    console.log(req.query);
+    try{
+        const {id} = req.query;
+        if(id){
+            const data = await getSucursalById(id);
+            res.send(data)
+        }else {
+            const data = await getSucursalAll();
+            res.send(data);
+        }
+    }catch(err){
+        console.error("Ocurrió un error al procesar la solicitud", err.message);
+        res.sendStatus(500);
+    } 
 });
+
 
 storageSucursal.post("/", limitGet(), appMiddlewareSucursalVerify, appDTODataSucursal, async(req, res)=>{
 

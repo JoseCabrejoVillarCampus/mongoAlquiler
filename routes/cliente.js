@@ -98,7 +98,87 @@ const getClienteByDocumento = (documento) => {
         resolve(result);
     });
 };
-
+const getClienteAllWithCar = ()=>{
+    return new Promise(async(resolve)=>{
+        let result = await cliente.aggregate([{
+            $lookup: {
+                from: "alquiler",
+                localField: "ID_Cliente",
+                foreignField: "ID_Cliente_id",
+                as: "alquiler_FK",
+            }
+        },
+        {
+            $project: {
+                "alquiler_FK._id": 0,
+                "alquiler_FK.ID_Cliente_id": 0,
+                "alquiler_FK.Costo_Total": 0,
+                "alquiler_FK.Fecha_Inicio": 0,
+                "alquiler_FK.Fecha_Fin": 0,
+            }
+        },
+        {
+            $unwind: "$alquiler_FK"
+        },
+        {
+            $lookup: {
+                from: "automovil",
+                localField: "alquiler_FK.ID_Automovil_id",
+                foreignField: "ID_Automovil",
+                as: "automovil_FK",
+            }
+        },
+        {
+            $project: {
+                "automovil_FK._id": 0,
+                "automovil_FK.ID_Automovil": 0,
+                "automovil_FK._id": 0,
+                "automovil_FK.Precio_Diario": 0
+            }
+        },
+        {
+            $match: {
+                "alquiler_FK.Estado": {
+                    $eq: "Disponible"
+                }
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                ID_Cliente: {
+                    $first: "$ID_Cliente"
+                },
+                Nombre: {
+                    $first: "$Nombre"
+                },
+                Apellido: {
+                    $first: "$Apellido"
+                },
+                DNI: {
+                    $first: "$DNI"
+                },
+                Direccion: {
+                    $first: "$Direccion"
+                },
+                Telefono: {
+                    $first: "$Telefono"
+                },
+                Email: {
+                    $first: "$Email"
+                },
+                alquiler_FK: {
+                    $push: "$alquiler_FK"
+                },
+                automovil_FK: {
+                    $push: "$automovil_FK"
+                }
+            }
+        }
+    ]).toArray();
+        resolve(result);
+    })
+};
 storageCliente.get("/", limitGet() ,appMiddlewareClienteVerify ,async(req, res)=>{
     try{
         const {id , estado, documento} = req.query;
@@ -115,6 +195,15 @@ storageCliente.get("/", limitGet() ,appMiddlewareClienteVerify ,async(req, res)=
             const data = await getClienteAll();
             res.send(data);
         }
+    }catch(err){
+        console.error("Ocurrió un error al procesar la solicitud", err.message);
+        res.sendStatus(500);
+    }
+});
+storageCliente.get("/reservaspendientes", limitGet() ,appMiddlewareClienteVerify ,async(req, res)=>{
+    try{
+        const data = await getClienteAllWithCar();
+        res.send(data)
     }catch(err){
         console.error("Ocurrió un error al procesar la solicitud", err.message);
         res.sendStatus(500);

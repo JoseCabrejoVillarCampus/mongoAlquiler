@@ -3,6 +3,7 @@ import { coneccion } from "../db/atlas.js";
 import { limitGet } from '../limit/config.js';
 import { plainToClass } from 'class-transformer';
 import { DTO } from '../limit/token.js';
+import expressQueryBoolean from 'express-query-boolean';
 import {appMiddlewareRegisDevoVerify, appDTODataRegisDevo, appDTOParamRegisDevo} from '../middleware/registro_devolucionmiddleware.js';
 import { RegisDevo } from '../dtocontroller/registro_devolucion.js';
 let storageRegisDevo = Router();
@@ -10,13 +11,102 @@ let storageRegisDevo = Router();
 let db = await coneccion();
 let registro_devolucion = db.collection("registro_devolucion");
 
-storageRegisDevo.get('/:id?', limitGet(), appMiddlewareRegisDevoVerify, async(req, res)=>{
-    
-    if(!req.rateLimit) return;
-    let result = (!req.params.id)
-    ? await registro_devolucion.find({}).toArray()
-    : await registro_devolucion.find({"ID_Registro": parseInt(req.params.id)}).toArray();
-    res.send(result)
+storageRegisDevo.use(expressQueryBoolean());
+
+const getRegisDevoById = (id)=>{
+    return new Promise(async(resolve)=>{
+        let result = await registro_devolucion.find({ID_Registro: parseInt(id)}).toArray();
+    resolve(result);
+    })
+};
+const getRegisDevoAll = ()=>{
+    return new Promise(async(resolve)=>{
+        let result = await registro_devolucion.find({}).toArray();
+        resolve(result);
+    })
+};
+const getRegisDevoAlmostOneAlquiler = ()=>{
+    return new Promise(async(resolve)=>{
+        let result = await registro_devolucion.aggregate([{
+            $lookup: {
+                from: "alquiler",
+                localField: "ID_Alquiler_id",
+                foreignField: "ID_Alquiler",
+                as: "alquiler_FK",
+            }
+        },
+        {
+            $unwind: "$alquiler_FK"
+        },
+        {
+            $lookup: {
+                from: "cliente",
+                localField: "alquiler_FK.ID_Cliente_id",
+                foreignField: "_id",
+                as: "cliente_FK",
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                ID_Registro: {
+                    $first: "$ID_Registro"
+                },
+                ID_Alquiler_id: {
+                    $first: "$ID_Alquiler_id"
+                },
+                ID_Empleado_id: {
+                    $first: "$ID_Empleado_id"
+                },
+                Fecha_Devolucion: {
+                    $first: "$Fecha_Devolucion"
+                },
+                Combustible_Devuelto: {
+                    $first: "$Combustible_Devuelto"
+                },
+                Kilometraje_Devuelto: {
+                    $first: "$Kilometraje_Devuelto"
+                },
+                Monto_Adicional: {
+                    $first: "$Monto_Adicional"
+                },
+                alquiler_FK: {
+                    $first: "$alquiler_FK"
+                },
+                cliente_FK: {
+                    $first: "$cliente_FK"
+                }
+            }
+        }
+    ]).toArray();
+        resolve(result);
+    })
+};
+
+storageRegisDevo.get("/", limitGet() ,appMiddlewareRegisDevoVerify ,async(req, res)=>{
+    console.log(req.query);
+    try{
+        const {id} = req.query;
+        if(id){
+            const data = await getRegisDevoById(id);
+            res.send(data)
+        }else {
+            const data = await getRegisDevoAll();
+            res.send(data);
+        }
+    }catch(err){
+        console.error("Ocurrió un error al procesar la solicitud", err.message);
+        res.sendStatus(500);
+    } 
+});
+storageRegisDevo.get("/almostonerent", limitGet() ,appMiddlewareRegisDevoVerify ,async(req, res)=>{
+    try{
+            const data = await getRegisDevoAlmostOneAlquiler();
+            res.send(data);
+    }catch(err){
+        console.error("Ocurrió un error al procesar la solicitud", err.message);
+        res.sendStatus(500);
+    } 
 });
 
 storageRegisDevo.post('/', limitGet(), appMiddlewareRegisDevoVerify, appDTODataRegisDevo, async(req, res) => {

@@ -16,11 +16,9 @@ storageAlquiler.use(expressQueryBoolean());
 
 const getAlquilerById = (id)=>{
     return new Promise(async(resolve)=>{
-        let result = await alquiler.aggregate([{
-            $match: {
+        let result = await alquiler.find({
                 ID_Alquiler: parseInt(id)
-            }
-        }]).toArray();
+        }).toArray();
     resolve(result);
     })
 };
@@ -53,16 +51,52 @@ const getAlquilerEstado = (estado)=>{
         resolve(result);
     })
 };
+const getAlquilerByFecha = (date)=>{
+    return new Promise(async(resolve)=>{
+        console.log(date);
+        let result = await alquiler.find({Fecha_Inicio: date}).toArray(); 
+        resolve(result);
+    })
+};
+const getAlquilerTotal = ()=>{
+    return new Promise(async(resolve)=>{
+        let result = await alquiler.aggregate([
+            {$count: 'ID_Alquiler'},
+            {
+                $project: {
+                    'Total de Alquileres' : '$ID_Alquiler'
+                }
+            }
+        ]).toArray();
+        resolve(result);
+    })
+};
 const getAlquilerAll = ()=>{
     return new Promise(async(resolve)=>{
         let result = await alquiler.find({}).toArray();
         resolve(result);
     })
 };
+const getAlquilerDateBetween = () => {
+    return new Promise(async (resolve) => {
+        const startDate = new Date("2023-09-02T05:00:00Z");
+        const endDate = new Date("2023-11-13T05:00:00Z");
+
+        let result = await alquiler.find({
+            Fecha_Inicio: {
+                $gte: startDate,
+                $lte: endDate
+            }
+        }).toArray();
+
+        resolve(result);
+    });
+};
 
 storageAlquiler.get("/", limitGet() ,appMiddlewareAlquilerVerify ,async(req, res)=>{
+    console.log(req.query);
     try{
-        const {id , estado, costo } = req.query;
+        const {id , estado, costo, date } = req.query;
         if(id){
             const data = await getAlquilerById(id);
             res.send(data)
@@ -72,6 +106,9 @@ storageAlquiler.get("/", limitGet() ,appMiddlewareAlquilerVerify ,async(req, res
         }else if (costo) {
             const data = await getCostoTotalById(costo);
             res.send(data);
+        }else if (date) {
+            const data = await getAlquilerByFecha(date);
+            res.send(data);
         }else {
             const data = await getAlquilerAll();
             res.send(data);
@@ -79,9 +116,28 @@ storageAlquiler.get("/", limitGet() ,appMiddlewareAlquilerVerify ,async(req, res
     }catch(err){
         console.error("Ocurrió un error al procesar la solicitud", err.message);
         res.sendStatus(500);
-    }
+    } 
 });
-
+storageAlquiler.get("/total", limitGet() ,appMiddlewareAlquilerVerify ,async(req, res)=>{
+    console.log(req.query);
+    try{
+        const data = await getAlquilerTotal();
+        res.send(data)
+    }catch(err){
+        console.error("Ocurrió un error al procesar la solicitud", err.message);
+        res.sendStatus(500);
+    } 
+});
+storageAlquiler.get("/datesbetween", limitGet() ,appMiddlewareAlquilerVerify ,async(req, res)=>{
+    console.log(req.query);
+    try{
+        const data = await getAlquilerDateBetween();
+        res.send(data)
+    }catch(err){
+        console.error("Ocurrió un error al procesar la solicitud", err.message);
+        res.sendStatus(500);
+    } 
+});
 storageAlquiler.post('/', limitGet(), appMiddlewareAlquilerVerify, appDTODataAlquiler , async(req, res) => {
     if(!req.rateLimit) return;
     try{

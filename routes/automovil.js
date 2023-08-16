@@ -33,21 +33,77 @@ const getAutomovilByCap = (capacidad)=>{
     resolve(result);
     })
 };
+const getAutomovilByCapDis = (capdisponible)=>{
+    return new Promise(async(resolve)=>{
+        let result = await automovil.aggregate([{
+            $match: {
+                Capacidad: parseInt(capdisponible)
+            }
+        },
+        {
+            $lookup: {
+                from: "alquiler",
+                localField: "ID_Automovil",
+                foreignField: "ID_Automovil_id",
+                as: "alquileres_FK"
+            }
+        },
+        {
+            $project: {
+                "_id": 0,
+                "Precio_Diario": 0,
+                "Anio": 0,
+                "Tipo": 0
+            }
+        },
+        {
+            $match: {
+                "alquileres_FK.Estado": "Disponible"
+            }
+        },
+        {
+            $project: {
+                "alquileres_FK._id": 0,
+                "alquileres_FK.ID_Alquiler": 0,
+                "alquileres_FK.ID_Cliente_id": 0,
+                "alquileres_FK.ID_Automovil_id": 0,
+                "alquileres_FK.Fecha_Inicio": 0,
+                "alquileres_FK.Fecha_Fin": 0,
+                "alquileres_FK.Costo_Total": 0,
+            }
+        }
+    ]).toArray();
+    resolve(result);
+    })
+};
 const getAutomovilAll = ()=>{
     return new Promise(async(resolve)=>{
         let result = await automovil.find({}).toArray();
         resolve(result);
     })
 };
+const getAutomovilOrder = ()=>{
+    return new Promise(async(resolve)=>{
+        let result = await automovil.aggregate([{
+            $sort: {
+                "Marca": 1
+            }
+        }]).toArray();
+        resolve(result);
+    })
+};
 
 storageAutomovil.get("/", limitGet() ,appMiddlewareAutomovilVerify ,async(req, res)=>{
     try{
-        const {id, capacidad } = req.query;
+        const {id, capacidad , capdisponible} = req.query;
         if(id){
             const data = await getAutomovilById(id);
             res.send(data)
         }else if(capacidad) {
             const data = await getAutomovilByCap(capacidad);
+            res.send(data);
+        } else if (capdisponible) {
+            const data = await getAutomovilByCapDis(capdisponible);
             res.send(data);
         }else {
             const data = await getAutomovilAll();
@@ -58,7 +114,15 @@ storageAutomovil.get("/", limitGet() ,appMiddlewareAutomovilVerify ,async(req, r
         res.sendStatus(500);
     }
 });
-
+storageAutomovil.get("/order", limitGet() ,appMiddlewareAutomovilVerify ,async(req, res)=>{
+    try{
+            const data = await getAutomovilOrder();
+            res.send(data);
+    }catch(err){
+        console.error("Ocurrió un error al procesar la solicitud", err.message);
+        res.sendStatus(500);
+    }
+});
 storageAutomovil.post('/', limitGet(), appMiddlewareAutomovilVerify, appDTODataAutomovil, async(req, res) => {
     if(!req.rateLimit) return;
     try {
@@ -68,7 +132,7 @@ storageAutomovil.post('/', limitGet(), appMiddlewareAutomovilVerify, appDTODataA
     } catch (error){
         const err = plainToClass(DTO("mongo").class, error.errInfo.details.schemaRulesNotSatisfied)
 
-        const errorList = processErrors(err, Sucursal);
+        const errorList = processErrors(err, Automovil);
 
         res.send(err);
     }
