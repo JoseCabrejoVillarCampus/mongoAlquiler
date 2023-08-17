@@ -365,6 +365,11 @@ http://127.12.31.02:5022/registro_devolucion/almostonerent
 
 * 16 Listar todos los automóviles ordenados por marca y modelo.
 
+```
+http://127.12.31.02:5022/automovil/order
+```
+
+
 * 17 Mostrar la cantidad total de automóviles en cada sucursal junto con su dirección.
 
 ```
