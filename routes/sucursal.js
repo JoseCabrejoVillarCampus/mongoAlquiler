@@ -16,13 +16,36 @@ storageSucursal.use(expressQueryBoolean());
 
 const getSucursalById = (id)=>{
     return new Promise(async(resolve)=>{
-        let result = await sucursal.find({ID_Sucursal: parseInt(id)}).toArray();
+        let result = await sucursal.aggregate([
+            {
+                $match: { "ID_Sucursal": parseInt(id) }
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "branchID": "$ID_Sucursal",
+                    "name": "$Nombre",
+                    "address": "$Direccion",
+                    "phoneNumber": "$Telefono"
+                }
+            }
+        ]).toArray();
     resolve(result);
     })
 };
 const getSucursalAll = ()=>{
     return new Promise(async(resolve)=>{
-        let result = await sucursal.find({}).toArray();
+        let result = await sucursal.aggregate([
+            {
+                $project: {
+                    "_id": 0,
+                    "branchID": "$ID_Sucursal",
+                    "name": "$Nombre",
+                    "address": "$Direccion",
+                    "phoneNumber": "$Telefono"
+                }
+            }
+        ]).toArray();
         resolve(result);
     })
 };

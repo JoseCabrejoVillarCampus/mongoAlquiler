@@ -15,56 +15,77 @@ storageReserva.use(expressQueryBoolean());
 
 const getReservaById = (id)=>{
     return new Promise(async(resolve)=>{
-        let result = await reserva.find({ID_Reserva: parseInt(id)}).toArray();
+        let result = await reserva.aggregate([
+            {
+                $match: { "ID_Reserva": parseInt(id) }
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "bookingID": "$ID_Reserva",
+                    "clientID": "$ID_Cliente_id",
+                    "carID": "$ID_Automovil_id",
+                    "reservation_date": "$Fecha_Reserva",
+                    "start_date": "$Fecha_Inicio",
+                    "end_date": "$Fecha_Fin",
+                    "estate": "$Estado"
+                }
+            }
+        ]).toArray();
     resolve(result);
     })
 };
-const getReservaByClient = (cliente)=>{
-    return new Promise(async(resolve)=>{
-        let result = await reserva.aggregate([{
-            $match: {
-                ID_Cliente_id: parseInt(cliente)
-            }
-        },
-        {
-            $lookup: {
-                from: "cliente",
-                localField: "ID_Cliente_id",
-                foreignField: "ID_Cliente",
-                as: "cliente_FK"
-            }
-        },
-        {
-            $unwind: "$cliente_FK"
-        },
-        {
-            $project: {
-                "cliente_FK._id": 0,
-            }
-        },
-        {
-            $match: {
-                Estado: "Apartado"
-            }
-        },
-        {
-            $group: {
-                _id: "$_id",
-                ID_Reserva: {
-                    $first: "$ID_Reserva"
-                },
-                Estado: {
-                    $first: "$Estado"
-                },
-                cliente_FK: {
-                    $push: "$cliente_FK"
-                },
-            }
-        }
-    ]).toArray();
+const getReservaByClient = (cliente) => {
+    return new Promise(async (resolve) => {
+        let result = await reserva.aggregate([
+            {
+                $match: {
+                    ID_Cliente_id: parseInt(cliente)
+                }
+            },
+            {
+                $lookup: {
+                    from: "cliente",
+                    localField: "ID_Cliente_id",
+                    foreignField: "ID_Cliente",
+                    as: "cliente_FK"
+                }
+            },
+            {
+                $unwind: "$cliente_FK"
+            },
+            {
+                $addFields: {
+                    "ClienteID": "$cliente_FK.ID_Cliente",
+                    "Nombre": "$cliente_FK.Nombre",
+                    "Apellido": "$cliente_FK.Apellido",
+                    "DNI": "$cliente_FK.DNI",
+                    "Direccion": "$cliente_FK.Direccion",
+                    "Telefono": "$cliente_FK.Telefono",
+                    "Email": "$cliente_FK.Email"
+                }
+            },
+            {
+                $match: {
+                    Estado: "Apartado"
+                }
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "bookingID": "$ID_Reserva",
+                    "state": "$Estado",
+                    "client": "$ClienteID",
+                    "name": "$Nombre", 
+                    "surname": "$Apellido", 
+                    "identification": "$DNI",
+                }
+            },
+        ]).toArray();
         resolve(result);
-    })
+    });
 };
+
 const getReservaDataClienByID = (reservacliente)=>{
     return new Promise(async(resolve)=>{
         let result = await reserva.aggregate([{
@@ -119,7 +140,20 @@ const getReservaDataClienByID = (reservacliente)=>{
 };
 const getReservaAll = ()=>{
     return new Promise(async(resolve)=>{
-        let result = await reserva.find({}).toArray();
+        let result = await reserva.aggregate([
+            {
+                $project: {
+                    "_id": 0,
+                    "bookingID": "$ID_Reserva",
+                    "clientID": "$ID_Cliente_id",
+                    "carID": "$ID_Automovil_id",
+                    "reservation_date": "$Fecha_Reserva",
+                    "start_date": "$Fecha_Inicio",
+                    "end_date": "$Fecha_Fin",
+                    "estate": "$Estado"
+                }
+            }
+        ]).toArray();
         resolve(result);
     })
 };

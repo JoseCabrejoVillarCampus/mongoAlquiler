@@ -15,21 +15,47 @@ storageAutomovil.use(expressQueryBoolean());
 
 const getAutomovilById = (id)=>{
     return new Promise(async(resolve)=>{
-        let result = await automovil.aggregate([{
-            $match: {
-                ID_Automovil: parseInt(id)
+        let result = await automovil.aggregate([
+            {
+                $match: { "ID_Automovil": parseInt(id) }
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "car": "$ID_Automovil",
+                    "brand": "$Marca",
+                    "model": "$Modelo",
+                    "year": "$Anio",
+                    "tipe": "$Tipo",
+                    "stalls": "$Capacidad",
+                    "price": "$Precio_Diario"
+                }
             }
-        }]).toArray();
+        ]).toArray();
     resolve(result);
     })
 };
 const getAutomovilByCap = (capacidad)=>{
     return new Promise(async(resolve)=>{
-        let result = await automovil.find({
-            Capacidad: {
-                $gt: parseInt(capacidad)
+        let result = await automovil.aggregate([
+            {
+                $match: { "Capacidad": {
+                    $gt: parseInt(capacidad)
+                } }
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "car": "$ID_Automovil",
+                    "brand": "$Marca",
+                    "model": "$Modelo",
+                    "year": "$Anio",
+                    "tipe": "$Tipo",
+                    "stalls": "$Capacidad",
+                    "price": "$Precio_Diario"
+                }
             }
-        }).toArray();
+        ]).toArray();
     resolve(result);
     })
 };
@@ -53,7 +79,7 @@ const getAutomovilByCapDis = (capdisponible)=>{
                 "_id": 0,
                 "Precio_Diario": 0,
                 "Anio": 0,
-                "Tipo": 0
+                "Tipo": 0,
             }
         },
         {
@@ -63,32 +89,68 @@ const getAutomovilByCapDis = (capdisponible)=>{
         },
         {
             $project: {
-                "alquileres_FK._id": 0,
-                "alquileres_FK.ID_Alquiler": 0,
-                "alquileres_FK.ID_Cliente_id": 0,
-                "alquileres_FK.ID_Automovil_id": 0,
-                "alquileres_FK.Fecha_Inicio": 0,
-                "alquileres_FK.Fecha_Fin": 0,
-                "alquileres_FK.Costo_Total": 0,
+                "car": "$ID_Automovil",
+                "brand": "$Marca",
+                "model": "$Modelo",
+                "stalls": "$Capacidad"
             }
-        }
+        },
     ]).toArray();
     resolve(result);
     })
 };
 const getAutomovilAll = ()=>{
     return new Promise(async(resolve)=>{
-        let result = await automovil.find({}).toArray();
+        let result = await automovil.aggregate([
+            {
+                $project: {
+                    "_id": 0,
+                    "car": "$ID_Automovil",
+                    "brand": "$Marca",
+                    "model": "$Modelo",
+                    "year": "$Anio",
+                    "tipe": "$Tipo",
+                    "stalls": "$Capacidad",
+                    "price": "$Precio_Diario"
+                }
+            }
+        ]).toArray();
         resolve(result);
     })
 };
 const getAutomovilOrder = ()=>{
     return new Promise(async(resolve)=>{
-        let result = await automovil.aggregate([{
-            $sort: {
-                "Marca": 1
+        let result = await automovil.aggregate([
+            { $match: { Tipo: "suv" } }, 
+            {
+                $project: {
+                    "_id": 0,
+                    "car": "$ID_Automovil",
+                    "brand": "$Marca",
+                    "model": "$Modelo",
+                    "year": "$Anio",
+                    "tipe": "$Tipo",
+                    "stalls": "$Capacidad",
+                    "price": "$Precio_Diario"
+                }
+            },
+            {
+                $group: {
+                    _id: "$brand",
+                    automoviles: {
+                    $push: "$$ROOT"
+                    }
+                }
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "marca_auto": "$_id",
+                    "automoviles": "$automoviles",
+                    
+                }
             }
-        }]).toArray();
+        ]).toArray();
         resolve(result);
     })
 };

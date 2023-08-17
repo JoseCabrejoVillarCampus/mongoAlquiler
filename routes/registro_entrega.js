@@ -15,13 +15,40 @@ storageRegisEnt.use(expressQueryBoolean());
 
 const getRegisEntById = (id)=>{
     return new Promise(async(resolve)=>{
-        let result = await registro_entrega.find({ID_Registro: parseInt(id)}).toArray();
+        let result = await registro_entrega.aggregate([
+            {
+                $match: { "ID_Registro": parseInt(id) }
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "recordID": "$ID_Registro",
+                    "renID": "$ID_Alquiler_id",
+                    "employed": "$ID_Empleado_id",
+                    "delivery_date": "$Fecha_Entrega",
+                    "delivery_fuel": "$Combustible_Entregado",
+                    "delivery_km": "$Kilometraje_Entregado",
+                }
+            }
+        ]).toArray();
     resolve(result);
     })
 };
 const getRegisEntAll = ()=>{
     return new Promise(async(resolve)=>{
-        let result = await registro_entrega.find({}).toArray();
+        let result = await registro_entrega.aggregate([
+            {
+                $project: {
+                    "_id": 0,
+                    "recordID": "$ID_Registro",
+                    "renID": "$ID_Alquiler_id",
+                    "employed": "$ID_Empleado_id",
+                    "delivery_date": "$Fecha_Entrega",
+                    "delivery_fuel": "$Combustible_Entregado",
+                    "delivery_km": "$Kilometraje_Entregado",
+                }
+            }
+        ]).toArray();
         resolve(result);
     })
 };

@@ -16,9 +16,23 @@ storageAlquiler.use(expressQueryBoolean());
 
 const getAlquilerById = (id)=>{
     return new Promise(async(resolve)=>{
-        let result = await alquiler.find({
-                ID_Alquiler: parseInt(id)
-        }).toArray();
+        let result = await alquiler.aggregate([
+            {
+                $match: { "ID_Alquiler": parseInt(id) }
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "rent": "$ID_Alquiler",
+                    "client": "$ID_Cliente_id",
+                    "car": "$ID_Automovil_id",
+                    "initDate": "$Fecha_Inicio",
+                    "endDate": "$Fecha_Fin",
+                    "totalCost": "$Costo_Total",
+                    "estate": "$Estado"
+                }
+            }
+        ]).toArray();
     resolve(result);
     })
 };
@@ -38,16 +52,37 @@ const getCostoTotalById = (costo)=>{
                 $match: {
                     "ID_Alquiler": {$eq: parseInt(costo)}
                 }
-            }
+            },
+            {
+                $project: {
+                    "rent": "ID_Alquiler",
+                    "client":"ID_Cliente_id",
+                    "Total": "Costo_Total"
+                }
+            },
         ]).toArray();
     resolve(result);
     })
 };
 const getAlquilerEstado = (estado)=>{
     return new Promise(async(resolve)=>{
-        let result = await alquiler.find({
-            Estado: estado
-        }).toArray();
+        let result = await alquiler.aggregate([
+            {
+                $match: { "Estado": estado }
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "rent": "$ID_Alquiler",
+                    "client": "$ID_Cliente_id",
+                    "car": "$ID_Automovil_id",
+                    "initDate": "$Fecha_Inicio",
+                    "endDate": "$Fecha_Fin",
+                    "totalCost": "$Costo_Total",
+                    "estate": "$Estado"
+                }
+            }
+        ]).toArray();
         resolve(result);
     })
 };
@@ -73,7 +108,20 @@ const getAlquilerTotal = ()=>{
 };
 const getAlquilerAll = ()=>{
     return new Promise(async(resolve)=>{
-        let result = await alquiler.find({}).toArray();
+        let result = await alquiler.aggregate([
+            {
+                $project: {
+                    "_id": 0,
+                    "rent": "$ID_Alquiler",
+                    "client": "$ID_Cliente_id",
+                    "car": "$ID_Automovil_id",
+                    "initDate": "$Fecha_Inicio",
+                    "endDate": "$Fecha_Fin",
+                    "totalCost": "$Costo_Total",
+                    "estate": "$Estado"
+                }
+            }
+        ]).toArray();
         resolve(result);
     })
 };
@@ -82,12 +130,27 @@ const getAlquilerDateBetween = () => {
         const startDate = new Date("2023-09-02T05:00:00Z");
         const endDate = new Date("2023-11-13T05:00:00Z");
 
-        let result = await alquiler.find({
-            Fecha_Inicio: {
-                $gte: startDate,
-                $lte: endDate
+        let result = await alquiler.aggregate([
+            {
+                $match: {"Fecha_Inicio": {
+                    $gte: startDate,
+                    $lte: endDate
+                }}
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "rent": "$ID_Alquiler",
+                    "client": "$ID_Cliente_id",
+                    "car": "$ID_Automovil_id",
+                    "initDate": "$Fecha_Inicio",
+                    "endDate": "$Fecha_Fin",
+                    "totalCost": "$Costo_Total",
+                    "estate": "$Estado"
+                }
             }
-        }).toArray();
+        ]).toArray();
+        
 
         resolve(result);
     });

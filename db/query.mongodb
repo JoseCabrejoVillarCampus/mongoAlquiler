@@ -530,7 +530,7 @@ db.alquiler.insertMany([{
         Fecha_Inicio:new Date (2023,10,13),
         Fecha_Fin:new Date (2023,11,13),
         Costo_Total:Double (700000.00),
-        Estado: "En Prestamo"
+        Estado: "Activo"
     },
     {
         ID_Alquiler: 3,
@@ -539,7 +539,7 @@ db.alquiler.insertMany([{
         Fecha_Inicio:new Date (2023,8,2),
         Fecha_Fin:new Date (2023,8,10),
         Costo_Total:Double (560000.00),
-        Estado: "En Prestamo",
+        Estado: "Disponible",
     },
     {
         ID_Alquiler: 4,
@@ -841,6 +841,39 @@ db.empleado.insertMany([{
 
 use("db_campus_alquiler");
 db.cliente.find()
+use("db_campus_alquiler");
+db.cliente.aggregate([
+    {
+    $project: {
+        "_id":0,
+        "client": "$ID_Cliente",
+        "name": "$Nombre",
+        "surname":"$Apellido",
+        "DNI":"$identificacion",
+        "address": "$Direccion",
+        "phonenumber": "$Telefono",
+        "emailAddress": "$Email",
+        }
+    }
+]);
+use("db_campus_alquiler");
+db.cliente.aggregate([
+    {
+        $match: { "ID_Cliente": 2 }
+    },
+    {
+        $project: {
+            "_id": 0,
+            "client": "$ID_Cliente",
+            "name": "$Nombre",
+            "surname": "$Apellido",
+            "DNI": "$DNI",
+            "address": "$Direccion",
+            "phonenumber": "$Telefono",
+            "emailAddress": "$Email"
+        }
+    }
+])
 
 //? 3 Obtener todos los automóviles disponibles para alquiler//
 
@@ -848,6 +881,7 @@ use("db_campus_alquiler");
 db.alquiler.find({
     Estado: "Disponible"
 });
+
 
 //? 4 Listar todos los alquileres activos junto con los datos de los clientes relacionados//
 //! en este caso usamos "En Prestamo"  //

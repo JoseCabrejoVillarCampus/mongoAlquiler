@@ -15,13 +15,42 @@ storageRegisDevo.use(expressQueryBoolean());
 
 const getRegisDevoById = (id)=>{
     return new Promise(async(resolve)=>{
-        let result = await registro_devolucion.find({ID_Registro: parseInt(id)}).toArray();
+        let result = await registro_devolucion.aggregate([
+            {
+                $match: { "ID_Registro": parseInt(id) }
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "record": "$ID_Registro",
+                    "renID": "$ID_Alquiler_id",
+                    "employees": "$ID_Empleado_id",
+                    "return_date": "$Fecha_Devolucion",
+                    "fuel_returned": "$Combustible_Devuelto",
+                    "mileage_returned": "$Kilometraje_Devuelto",
+                    "additional_amount": "$Monto_Adicional"
+                }
+            }
+        ]).toArray();
     resolve(result);
     })
 };
 const getRegisDevoAll = ()=>{
     return new Promise(async(resolve)=>{
-        let result = await registro_devolucion.find({}).toArray();
+        let result = await registro_devolucion.aggregate([
+            {
+                $project: {
+                    "_id": 0,
+                    "record": "$ID_Registro",
+                    "renID": "$ID_Alquiler_id",
+                    "employees": "$ID_Empleado_id",
+                    "return_date": "$Fecha_Devolucion",
+                    "fuel_returned": "$Combustible_Devuelto",
+                    "mileage_returned": "$Kilometraje_Devuelto",
+                    "additional_amount": "$Monto_Adicional"
+                }
+            }
+        ]).toArray();
         resolve(result);
     })
 };
@@ -42,7 +71,7 @@ const getRegisDevoAlmostOneAlquiler = ()=>{
             $lookup: {
                 from: "cliente",
                 localField: "alquiler_FK.ID_Cliente_id",
-                foreignField: "_id",
+                foreignField: "ID_Cliente",
                 as: "cliente_FK",
             }
         },
@@ -77,7 +106,24 @@ const getRegisDevoAlmostOneAlquiler = ()=>{
                     $first: "$cliente_FK"
                 }
             }
-        }
+        },
+        {
+            $project: {
+                "_id": 0,
+                "record": "$ID_Registro",
+                "renID": "$ID_Alquiler_id",
+                "employees": "$ID_Empleado_id",
+                "Rent": {
+                    "rentID": "$alquiler_FK.ID_Alquiler",
+                },
+                "Cliente": {
+                    "client": "$cliente_FK.ID_Cliente",
+                    "name": "$cliente_FK.Nombre",
+                    "surname": "$cliente_FK.Apellido",
+                    "identification": "$cliente_FK.DNI",
+                }
+            }
+        },
     ]).toArray();
         resolve(result);
     })

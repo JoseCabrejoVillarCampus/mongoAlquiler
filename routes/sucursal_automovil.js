@@ -16,7 +16,19 @@ storageSucuAutomovil.use(expressQueryBoolean());
 
 const getSucuAutomovilById = (id)=>{
     return new Promise(async(resolve)=>{
-        let result = await sucursal_automovil.find({ "ID_Sucursal_id": parseInt(id)}).toArray();
+        let result = await sucursal_automovil.aggregate([
+            {
+                $match: { "ID_Sucursal_id": parseInt(id) }
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "branchID": "$ID_Sucursal_id",
+                    "carID": "$ID_Automovil_id",
+                    "quantity_available": "$Cantidad_Disponible"
+                }
+            }
+        ]).toArray();
         resolve(result);
     })
 };
@@ -35,15 +47,6 @@ const getSucuAutoDisponible = ()=>{
             $unwind: "$sucursal_FK"
         },
         {
-            $project: {
-                "ID_Automovil_id": 0,
-                "sucursal_FK._id": 0,
-                "sucursal_FK.ID_Sucursal": 0,
-                "sucursal_FK.Telefono": 0,
-                "sucursal_FK.Direccion": 0
-            }
-        },
-        {
             $group: {
                 _id: "$_id",
                 Cantidad_Disponible: {
@@ -53,7 +56,24 @@ const getSucuAutoDisponible = ()=>{
                     $push: "$sucursal_FK"
                 }
             }
-        }
+        },
+        {
+            $addFields: {
+                "ID_Sucursal": "$sucursal_FK.ID_Sucursal",
+                "Nombre": "$sucursal_FK.Nombre",
+                "Direccion": "$sucursal_FK.Direccion",
+                "Telefono": "$sucursal_FK.Telefono",
+            }
+        },
+        {
+            $project: {
+                "_id": 0,
+                "branchID": "$ID_Sucursal",
+                "name": "$Nombre",
+                "address": "$Direccion",
+                "phonenumber": "$Telefono", 
+            }
+        },
     ]).toArray();
         resolve(result);
     })
@@ -61,46 +81,65 @@ const getSucuAutoDisponible = ()=>{
 
 const getSucuAutomovilAll = ()=>{
     return new Promise(async(resolve)=>{
-        let result = await sucursal_automovil.find({}).toArray();
-        resolve(result);
-    })
-};
-const getSucuAutomovilAddress = ()=>{
-    return new Promise(async(resolve)=>{
-        let result = await sucursal_automovil.aggregate([{
-            $lookup: {
-                from: "sucursal",
-                localField: "ID_Sucursal_id",
-                foreignField: "ID_Sucursal",
-                as: "sucursal_FK"
-            },
-        },
-        {
-            $unwind: "$sucursal_FK"
-        },
-        {
-            $project: {
-                "ID_Automovil_id": 0,
-                "sucursal_FK._id": 0,
-                "sucursal_FK.ID_Sucursal": 0,
-                "sucursal_FK.Telefono": 0,
-            }
-        },
-        {
-            $group: {
-                _id: "$sucursal_FK.Nombre",
-                Cantidad_Disponible: {
-                    $sum: "$Cantidad_Disponible"
-                },
-                sucursal_FK: {
-                    $first: "$sucursal_FK"
+        let result = await sucursal_automovil.aggregate([
+            {
+                $project: {
+                    "_id": 0,
+                    "branchID": "$ID_Sucursal_id",
+                    "carID": "$ID_Automovil_id",
+                    "quantity_available": "$Cantidad_Disponible"
                 }
             }
-        }
-    ]).toArray();
+        ]).toArray();
         resolve(result);
     })
 };
+const getSucuAutomovilAddress = () => {
+    return new Promise(async (resolve) => {
+        let result = await sucursal_automovil.aggregate([
+            {
+                $lookup: {
+                    from: "sucursal",
+                    localField: "ID_Sucursal_id",
+                    foreignField: "ID_Sucursal",
+                    as: "sucursal_FK"
+                },
+            },
+            {
+                $unwind: "$sucursal_FK"
+            },
+            {
+                $project: {
+                    "ID_Automovil_id": 0,
+                    "sucursal_FK._id": 0,
+                    "sucursal_FK.ID_Sucursal": 0,
+                    "sucursal_FK.Telefono": 0,
+                }
+            },
+            {
+                $group: {
+                    _id: "$sucursal_FK.Nombre",
+                    Cantidad_Disponible: {
+                        $sum: "$Cantidad_Disponible"
+                    },
+                    sucursal_FK: {
+                        $first: "$sucursal_FK"
+                    }
+                }
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "brand": "$_id", 
+                    "quantity_available":"$Cantidad_Disponible",
+                    "address": "$sucursal_FK.Direccion" 
+                }
+            }
+        ]).toArray();
+        resolve(result);
+    })
+};
+
 
 storageSucuAutomovil.get("/", limitGet() ,appMiddlewareSucuAutomovilVerify ,async(req, res)=>{
     try{

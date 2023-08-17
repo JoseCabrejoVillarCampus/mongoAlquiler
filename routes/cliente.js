@@ -15,13 +15,42 @@ storageCliente.use(expressQueryBoolean());
 
 const getClienteById = (id)=>{
     return new Promise(async(resolve)=>{
-        let result = await cliente.find({ "ID_Cliente": parseInt(id)}).toArray();
+        let result = await cliente.aggregate([
+            {
+                $match: { "ID_Cliente": parseInt(id) }
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "client": "$ID_Cliente",
+                    "name": "$Nombre",
+                    "surname": "$Apellido",
+                    "identification": "$DNI",
+                    "address": "$Direccion",
+                    "phonenumber": "$Telefono",
+                    "emailAddress": "$Email"
+                }
+            }
+        ]).toArray();
         resolve(result);
     })
 };
 const getClienteAll = ()=>{
     return new Promise(async(resolve)=>{
-        let result = await cliente.find({}).toArray();
+        let result = await cliente.aggregate([
+            {
+            $project: {
+                "_id":0,
+                "client": "$ID_Cliente",
+                "name": "$Nombre",
+                "surname":"$Apellido",
+                "DNI":"$identificacion",
+                "address": "$Direccion",
+                "phonenumber": "$Telefono",
+                "emailAddress": "$Email",
+                }
+            }
+        ]).toArray();
         resolve(result);
     })
 };

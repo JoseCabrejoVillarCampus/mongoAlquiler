@@ -15,33 +15,90 @@ storageEmpleado.use(expressQueryBoolean());
 
 const getEmpleadoById = (id)=>{
     return new Promise(async(resolve)=>{
-        let result = await empleado.find({ "ID_Empleado": parseInt(id)}).toArray();
+        let result = await empleado.aggregate([
+            {
+                $match: { "ID_Empleado": parseInt(id) }
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "employee": "$ID_Cliente",
+                    "name": "$Nombre",
+                    "surname": "$Apellido",
+                    "DNI": "$DNI",
+                    "address": "$Direccion",
+                    "phonenumber": "$Telefono",
+                    "ocupation": "$Cargo",
+                }
+            }
+        ]).toArray();
         resolve(result);
     })
 };
 const getEmpleadoByCargo = (cargo)=>{
     return new Promise(async(resolve)=>{
-        let result = await empleado.find({
-            Cargo: cargo
-        }).toArray();
+        let result = await empleado.aggregate([
+            {
+                $match: { "Cargo": cargo }
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "employee": "$ID_Cliente",
+                    "name": "$Nombre",
+                    "surname": "$Apellido",
+                    "DNI": "$DNI",
+                    "address": "$Direccion",
+                    "phonenumber": "$Telefono",
+                    "ocupation": "$Cargo",
+                }
+            }
+        ]).toArray();
         resolve(result);
     })
 };
 const getEmpleadoByCargos = ()=>{
     return new Promise(async(resolve)=>{
-        let result = await empleado.find({
-            $or: [{
-                Cargo: "Gerente"
-            }, {
-                Cargo: "Vendedor"
-            }]
-        }).toArray();
+        let result = await empleado.aggregate([
+            {
+                $match: {$or: [{
+                    Cargo: "Gerente"
+                }, {
+                    Cargo: "Vendedor"
+                }]}
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "employee": "$ID_Cliente",
+                    "name": "$Nombre",
+                    "surname": "$Apellido",
+                    "DNI": "$DNI",
+                    "address": "$Direccion",
+                    "phonenumber": "$Telefono",
+                    "ocupation": "$Cargo",
+                }
+            }
+        ]).toArray();
         resolve(result);
     })
 };
 const getEmpleadoAll = ()=>{
     return new Promise(async(resolve)=>{
-        let result = await empleado.find({}).toArray();
+        let result = await empleado.aggregate([
+            {
+                $project: {
+                    "_id": 0,
+                    "employee": "$ID_Cliente",
+                    "name": "$Nombre",
+                    "surname": "$Apellido",
+                    "DNI": "$DNI",
+                    "address": "$Direccion",
+                    "phonenumber": "$Telefono",
+                    "ocupation": "$Cargo",
+                }
+            }
+        ]).toArray();
         resolve(result);
     })
 };
